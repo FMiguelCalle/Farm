@@ -1,0 +1,59 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.7.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+
+group = 'com.fmcc'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+test {
+	jacoco {
+		excludes = ["com.fmcc.farm.model","com.fmcc.farm.dto"]
+	}
+	reports {
+		html.enabled = true
+		html.destination = "${buildDir}/reports/coverage"
+	}
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['com/fmcc/farm/model','com/fmcc/farm/dto'])
+        })
+    }
+    reports {
+    	html.enabled = true
+    	html.destination = "${buildDir}/reports/coverage"
+    }
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	// https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
+	compile group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.7.9'
+	// https://mvnrepository.com/artifact/net.sf.dozer/dozer
+	compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
+	compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	runtime('mysql:mysql-connector-java')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
