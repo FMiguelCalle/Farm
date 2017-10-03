@@ -16,8 +16,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.fmcc.farm.dao.UserDAO;
 import com.fmcc.farm.model.User;
-import com.fmcc.farm.service.UserService;
-import com.fmcc.farm.service.UserServiceImpl;
+import com.fmcc.farm.service.user.UserService;
+import com.fmcc.farm.service.user.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestUserService {

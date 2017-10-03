@@ -16,8 +16,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.fmcc.farm.dao.ChickenDAO;
 import com.fmcc.farm.model.Chicken;
-import com.fmcc.farm.service.ChickenService;
-import com.fmcc.farm.service.ChickenServiceImpl;
+import com.fmcc.farm.service.chicken.ChickenService;
+import com.fmcc.farm.service.chicken.ChickenServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestChickenService {

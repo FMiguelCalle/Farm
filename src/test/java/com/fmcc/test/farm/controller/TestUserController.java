@@ -11,14 +11,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fmcc.farm.controller.UserController;
-import com.fmcc.farm.controller.UserControllerImpl;
+import com.fmcc.farm.controller.user.UserController;
+import com.fmcc.farm.controller.user.UserControllerImpl;
 import com.fmcc.farm.dto.UserDTO;
-import com.fmcc.farm.mappers.UserMapper;
-import com.fmcc.farm.mappers.UserMapperImpl;
+import com.fmcc.farm.mappers.user.UserMapper;
+import com.fmcc.farm.mappers.user.UserMapperImpl;
 import com.fmcc.farm.model.User;
-import com.fmcc.farm.service.UserService;
-import com.fmcc.farm.service.UserServiceImpl;
+import com.fmcc.farm.service.user.UserService;
+import com.fmcc.farm.service.user.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestUserController {

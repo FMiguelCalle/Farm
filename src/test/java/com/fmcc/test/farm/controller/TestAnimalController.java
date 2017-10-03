@@ -11,8 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fmcc.farm.controller.AnimalController;
-import com.fmcc.farm.controller.AnimalControllerImpl;
+import com.fmcc.farm.controller.useranimals.UserAnimalsController;
+import com.fmcc.farm.controller.useranimals.UserAnimalsControllerImpl;
 import com.fmcc.farm.dto.AnimalDTO;
 import com.fmcc.farm.mappers.AnimalMapper;
 import com.fmcc.farm.mappers.AnimalMapperImpl;
@@ -33,7 +33,7 @@ public class TestAnimalController {
 	private static final Integer SIZE = 5;
 	
 	@InjectMocks
-	private AnimalController animalController = new AnimalControllerImpl();
+	private UserAnimalsController animalController = new UserAnimalsControllerImpl();
 
 	@Mock
 	private AnimalService animalService = new AnimalServiceImpl();

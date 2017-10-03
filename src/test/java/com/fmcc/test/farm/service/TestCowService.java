@@ -16,8 +16,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.fmcc.farm.dao.CowDAO;
 import com.fmcc.farm.model.Cow;
-import com.fmcc.farm.service.CowService;
-import com.fmcc.farm.service.CowServiceImpl;
+import com.fmcc.farm.service.cow.CowService;
+import com.fmcc.farm.service.cow.CowServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestCowService {

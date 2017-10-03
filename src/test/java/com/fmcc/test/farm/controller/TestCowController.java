@@ -11,16 +11,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fmcc.farm.controller.CowController;
-import com.fmcc.farm.controller.CowControllerImpl;
+import com.fmcc.farm.controller.cow.CowController;
+import com.fmcc.farm.controller.cow.CowControllerImpl;
 import com.fmcc.farm.dto.CowDTO;
-import com.fmcc.farm.mappers.CowMapper;
-import com.fmcc.farm.mappers.CowMapperImpl;
+import com.fmcc.farm.mappers.cow.CowMapper;
+import com.fmcc.farm.mappers.cow.CowMapperImpl;
 import com.fmcc.farm.model.Cow;
-import com.fmcc.farm.service.CowService;
-import com.fmcc.farm.service.CowServiceImpl;
-import com.fmcc.farm.service.UserService;
-import com.fmcc.farm.service.UserServiceImpl;
+import com.fmcc.farm.service.cow.CowService;
+import com.fmcc.farm.service.cow.CowServiceImpl;
+import com.fmcc.farm.service.user.UserService;
+import com.fmcc.farm.service.user.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestCowController {

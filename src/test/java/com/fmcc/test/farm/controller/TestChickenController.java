@@ -11,16 +11,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fmcc.farm.controller.ChickenController;
-import com.fmcc.farm.controller.ChickenControllerImpl;
+import com.fmcc.farm.controller.chicken.ChickenController;
+import com.fmcc.farm.controller.chicken.ChickenControllerImpl;
 import com.fmcc.farm.dto.ChickenDTO;
-import com.fmcc.farm.mappers.ChickenMapper;
-import com.fmcc.farm.mappers.ChickenMapperImpl;
+import com.fmcc.farm.mappers.chicken.ChickenMapper;
+import com.fmcc.farm.mappers.chicken.ChickenMapperImpl;
 import com.fmcc.farm.model.Chicken;
-import com.fmcc.farm.service.ChickenService;
-import com.fmcc.farm.service.ChickenServiceImpl;
-import com.fmcc.farm.service.UserService;
-import com.fmcc.farm.service.UserServiceImpl;
+import com.fmcc.farm.service.chicken.ChickenService;
+import com.fmcc.farm.service.chicken.ChickenServiceImpl;
+import com.fmcc.farm.service.user.UserService;
+import com.fmcc.farm.service.user.UserServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestChickenController {

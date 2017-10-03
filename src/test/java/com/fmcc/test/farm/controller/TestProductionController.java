@@ -12,18 +12,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fmcc.farm.controller.ProductionController;
-import com.fmcc.farm.controller.ProductionControllerImpl;
+import com.fmcc.farm.controller.production.ProductionController;
+import com.fmcc.farm.controller.production.ProductionControllerImpl;
 import com.fmcc.farm.dto.ProductionDTO;
-import com.fmcc.farm.mappers.ProductionMapper;
-import com.fmcc.farm.mappers.ProductionMapperImpl;
+import com.fmcc.farm.mappers.production.ProductionMapper;
+import com.fmcc.farm.mappers.production.ProductionMapperImpl;
 import com.fmcc.farm.model.Production;
-import com.fmcc.farm.service.ChickenService;
-import com.fmcc.farm.service.ChickenServiceImpl;
-import com.fmcc.farm.service.CowService;
-import com.fmcc.farm.service.CowServiceImpl;
-import com.fmcc.farm.service.ProductionService;
-import com.fmcc.farm.service.ProductionServiceImpl;
+import com.fmcc.farm.service.chicken.ChickenService;
+import com.fmcc.farm.service.chicken.ChickenServiceImpl;
+import com.fmcc.farm.service.cow.CowService;
+import com.fmcc.farm.service.cow.CowServiceImpl;
+import com.fmcc.farm.service.production.ProductionService;
+import com.fmcc.farm.service.production.ProductionServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestProductionController {

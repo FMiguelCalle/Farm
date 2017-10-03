@@ -14,8 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.fmcc.farm.dto.UserDTO;
 import com.fmcc.farm.mappers.AnimalMapper;
 import com.fmcc.farm.mappers.AnimalMapperImpl;
-import com.fmcc.farm.mappers.UserMapper;
-import com.fmcc.farm.mappers.UserMapperImpl;
+import com.fmcc.farm.mappers.user.UserMapper;
+import com.fmcc.farm.mappers.user.UserMapperImpl;
 import com.fmcc.farm.model.User;
 
 @RunWith(MockitoJUnitRunner.class)

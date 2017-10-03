@@ -12,10 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fmcc.farm.dto.CowDTO;
-import com.fmcc.farm.mappers.CowMapper;
-import com.fmcc.farm.mappers.CowMapperImpl;
-import com.fmcc.farm.mappers.ProductionMapper;
-import com.fmcc.farm.mappers.ProductionMapperImpl;
+import com.fmcc.farm.mappers.cow.CowMapper;
+import com.fmcc.farm.mappers.cow.CowMapperImpl;
+import com.fmcc.farm.mappers.production.ProductionMapper;
+import com.fmcc.farm.mappers.production.ProductionMapperImpl;
 import com.fmcc.farm.model.Cow;
 
 @RunWith(MockitoJUnitRunner.class)

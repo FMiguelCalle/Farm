@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fmcc.farm.dto.StatsTopAnimalDTO;
-import com.fmcc.farm.service.StatsTopAnimalService;
+import com.fmcc.farm.service.statstopanimal.StatsTopAnimalService;
 
 @RestController
 @RequestMapping("/user/{user_id}/animal/stats/{n}")

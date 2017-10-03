@@ -17,8 +17,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.fmcc.farm.dao.ProductionDAO;
 import com.fmcc.farm.model.Production;
-import com.fmcc.farm.service.ProductionService;
-import com.fmcc.farm.service.ProductionServiceImpl;
+import com.fmcc.farm.service.production.ProductionService;
+import com.fmcc.farm.service.production.ProductionServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestProductionService {

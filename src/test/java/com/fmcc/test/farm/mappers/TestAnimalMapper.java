@@ -14,8 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.fmcc.farm.dto.AnimalDTO;
 import com.fmcc.farm.mappers.AnimalMapper;
 import com.fmcc.farm.mappers.AnimalMapperImpl;
-import com.fmcc.farm.mappers.ProductionMapper;
-import com.fmcc.farm.mappers.ProductionMapperImpl;
+import com.fmcc.farm.mappers.production.ProductionMapper;
+import com.fmcc.farm.mappers.production.ProductionMapperImpl;
 import com.fmcc.farm.model.Animal;
 import com.fmcc.farm.model.Chicken;
 

@@ -12,8 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fmcc.farm.dto.ProductionDTO;
-import com.fmcc.farm.mappers.ProductionMapper;
-import com.fmcc.farm.mappers.ProductionMapperImpl;
+import com.fmcc.farm.mappers.production.ProductionMapper;
+import com.fmcc.farm.mappers.production.ProductionMapperImpl;
 import com.fmcc.farm.model.Production;
 
 @RunWith(MockitoJUnitRunner.class)
