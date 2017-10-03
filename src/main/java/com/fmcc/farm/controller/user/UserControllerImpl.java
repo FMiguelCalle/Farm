@@ -64,11 +64,9 @@ public class UserControllerImpl implements UserController{
 	@RequestMapping(method = RequestMethod.GET)
 	public List<UserDTO> getAll(@RequestParam(name="page",defaultValue="1") Integer page,@RequestParam(name="size",defaultValue="5") Integer size) {
 		final List<UserDTO> dtos = new ArrayList<>();
-		if(page > 0 && size < 11 && size>0) {
-			userService.getAll(page-1,size).forEach(u -> {
-				dtos.add(userMapper.map(u));
-			});
-		}
+		userService.getAll(page-1,size).forEach(u -> {
+			dtos.add(userMapper.map(u));
+		});
 		return dtos;
 	}
 

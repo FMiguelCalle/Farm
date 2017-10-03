@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.UserDAO;
 import com.fmcc.farm.model.Animal;
 import com.fmcc.farm.model.User;
+import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 
 @Service
@@ -17,6 +18,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserDAO dao;
+	
+	@Autowired
+	private PageAndSizeValidator pageAndSizeValidator;
 	
 	@Override
 	public User create(User t) {
@@ -36,7 +40,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<User> getAll(Integer page, Integer size) {
 		final List<User> users = new ArrayList<>();
-		dao.findAll(new PageRequest(page, size)).forEach(c -> users.add(c));
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.findAll(new PageRequest(page-1, size)).forEach(c -> users.add(c));
+		}
 		return users;
 	}
 

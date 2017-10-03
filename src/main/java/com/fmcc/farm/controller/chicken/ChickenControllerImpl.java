@@ -81,10 +81,8 @@ public class ChickenControllerImpl implements ChickenController{
 									@RequestParam(name="size",defaultValue="5") Integer size,
 									@PathVariable(name="user_id") Integer userId) {
 		final List<ChickenDTO> dtos = new ArrayList<>();
-		if(page > 0 && size < 11 && size>0) {
-			chickenService.getAll(userId,page-1, size).forEach(c -> 
-				dtos.add(chickenMapper.map(c)));
-		}
+		chickenService.getAll(userId,page, size).forEach(c -> 
+		dtos.add(chickenMapper.map(c)));
 		return dtos;
 	}
 

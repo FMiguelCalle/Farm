@@ -93,11 +93,9 @@ public class ProductionControllerImpl implements ProductionController {
 										@RequestParam(name="page",defaultValue="1") Integer page, 
 										@RequestParam(name="size",defaultValue="5") Integer size) {
 		List<ProductionDTO> dtos = new ArrayList<>();
-		if(page > 0 && size < 11 && size > 0) {
-			productionService.getAll(animalId,page-1,size).forEach(prod -> {
-				dtos.add(productionMapper.map(prod));
-			});	
-		}
+		productionService.getAll(animalId,page-1,size).forEach(prod -> {
+			dtos.add(productionMapper.map(prod));
+		});	
 		return dtos;
 	}
 

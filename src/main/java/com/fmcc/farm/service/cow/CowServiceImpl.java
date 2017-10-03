@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.CowDAO;
 import com.fmcc.farm.model.Cow;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
 public class CowServiceImpl implements CowService{
 	
 	@Autowired
 	private CowDAO dao;
+	
+	@Autowired
+	private PageAndSizeValidator pageAndSizeValidator;
 
 	@Override
 	public Cow create(Cow t) {
@@ -30,9 +34,11 @@ public class CowServiceImpl implements CowService{
 	@Override
 	public List<Cow> getAll(Integer userId, Integer page, Integer size) {
 		final List<Cow> cows = new ArrayList<>();
-		dao.findAllByUserId(userId, new PageRequest(page, size)).forEach(cow -> {
-			cows.add(cow);
-		});
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.findAllByUserId(userId, new PageRequest(page-1, size)).forEach(cow -> {
+				cows.add(cow);
+			});
+		}
 		return cows;
 	}
 
@@ -53,9 +59,11 @@ public class CowServiceImpl implements CowService{
 	@Override
 	public List<Cow> findAllByUserId(Integer userId, Integer page, Integer size) {
 		final List<Cow> cows = new ArrayList<>();
-		dao.findAllByUserId(userId, new PageRequest(page,size)).forEach(c -> {
-			cows.add(c);
-		});
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.findAllByUserId(userId, new PageRequest(page-1,size)).forEach(c -> {
+				cows.add(c);
+			});
+		}
 		return cows;
 	}
 

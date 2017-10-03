@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.fmcc.farm.dao.ProductionDAO;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
 public class ProductionServiceImpl implements ProductionService{
 
 	@Autowired
 	private ProductionDAO dao;
+	
+	@Autowired
+	private PageAndSizeValidator pageAndSizeValidator;
 
 	@Override
 	public Production create(Production t) {
@@ -34,9 +38,11 @@ public class ProductionServiceImpl implements ProductionService{
 	@Override
 	public List<Production> getAll(Integer animalId, Integer page, Integer size) {
 		final List<Production> productions = new ArrayList<>();
-		dao.findAllByAnimalId(animalId, new PageRequest(page, size)).forEach(production -> {
-			productions.add(production);
-		});
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.findAllByAnimalId(animalId, new PageRequest(page-1, size)).forEach(production -> {
+				productions.add(production);
+			});
+		}
 		return productions;
 	}
 

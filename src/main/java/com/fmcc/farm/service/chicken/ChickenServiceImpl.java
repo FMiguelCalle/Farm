@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.ChickenDAO;
 import com.fmcc.farm.model.Chicken;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
 public class ChickenServiceImpl implements ChickenService{
@@ -17,11 +18,13 @@ public class ChickenServiceImpl implements ChickenService{
 	@Autowired
 	private ChickenDAO dao;
 	
+	@Autowired
+	private PageAndSizeValidator pageAndSizeValidator;
 	
 	@Override
 	public Chicken create(Chicken t) {	
 		return dao.save(t);
-	}   
+	}
 
 	@Override
 	public void update(Chicken t) {
@@ -31,9 +34,11 @@ public class ChickenServiceImpl implements ChickenService{
 	@Override
 	public List<Chicken> getAll(Integer userId, Integer page, Integer size) {
 		final List<Chicken> chickens = new ArrayList<>();
-		dao.findAllByUserId(userId, new PageRequest(page, size)).forEach(chicken -> {
-			chickens.add(chicken);
-		});
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.findAllByUserId(userId, new PageRequest(page-1, size)).forEach(chicken -> {
+				chickens.add(chicken);
+			});
+		}
 		return chickens;
 	}
 
@@ -54,9 +59,11 @@ public class ChickenServiceImpl implements ChickenService{
 	@Override
 	public List<Chicken> findAllByUserId(Integer userId, Integer page, Integer size) {
 		final List<Chicken> chickens = new ArrayList<>();
-		dao.findAllByUserId(userId, new PageRequest(page,size)).forEach(c -> {
-			chickens.add(c);
-		});
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.findAllByUserId(userId, new PageRequest(page-1,size)).forEach(c -> {
+				chickens.add(c);
+			});
+		}
 		return chickens;
 	}
 

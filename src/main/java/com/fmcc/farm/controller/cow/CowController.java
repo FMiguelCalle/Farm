@@ -16,6 +16,4 @@ public interface CowController {
 
 	CowDTO findById(Integer id);
 
-	
-
 }

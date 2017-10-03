@@ -40,11 +40,11 @@ public class UserAnimalsControllerImpl implements UserAnimalsController{
 									@RequestParam(name="size",defaultValue="5") Integer size, 
 									@PathVariable(name="user_id") Integer userId) {
 		final List<ChickenDTO> chickens = new ArrayList<>();
-		chickenService.findAllByUserId(userId, page-1, size).forEach(c -> {
+		chickenService.findAllByUserId(userId, page, size).forEach(c -> {
 			chickens.add(chickenMapper.map(c));
 		});
 		final List<CowDTO> cows = new ArrayList<>();
-		cowService.findAllByUserId(userId, page-1, size).forEach(c -> {
+		cowService.findAllByUserId(userId, page, size).forEach(c -> {
 			cows.add(cowMapper.map(c));
 		});
 		return new UserAnimalsDTO(chickens, cows);
