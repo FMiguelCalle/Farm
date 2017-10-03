@@ -15,6 +15,9 @@ import com.fmcc.farm.model.User;
 import com.fmcc.farm.service.chicken.ChickenService;
 import com.fmcc.farm.service.cow.CowService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class UserMapperImpl implements UserMapper{
 
@@ -35,6 +38,7 @@ public class UserMapperImpl implements UserMapper{
 			ids.add(a.getId());
 		});
 		final User user = u;
+		user.setAnimals(new ArrayList<>());
 		final UserDTO dto = mapper.map(user, UserDTO.class);
 		dto.setAnimals(ids);
 		return dto;
@@ -52,6 +56,7 @@ public class UserMapperImpl implements UserMapper{
 				animals.add(chicken);
 			}
 		});
+		log.info(animals.toString());
 		final UserDTO dto = u;
 		final User user = mapper.map(dto, User.class);
 		user.setAnimals(animals);
