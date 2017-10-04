@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.ChickenDAO;
 import com.fmcc.farm.model.Chicken;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
@@ -21,14 +22,19 @@ public class ChickenServiceImpl implements ChickenService{
 	@Autowired
 	private PageAndSizeValidator pageAndSizeValidator;
 	
+	@Autowired
+	private PathIdAndDTOIdMatchValidator idValidator;
+	
 	@Override
 	public Chicken create(Chicken t) {	
 		return dao.save(t);
 	}
 
 	@Override
-	public void update(Chicken t) {
-		dao.save(t);
+	public void update(Chicken t, Integer pathId) {
+		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+			dao.save(t);
+		}
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class ChickenServiceImpl implements ChickenService{
 		final List<Production> productions = c.getProductions();
 		productions.add(p);
 		c.setProductions(productions);
-		update(c);
+		update(c,animalId);
 	}
 	
 	@Override

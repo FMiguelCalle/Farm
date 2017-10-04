@@ -61,18 +61,9 @@ public class ChickenControllerImpl implements ChickenController{
 	public void update(@RequestBody ChickenDTO t, 
 						@PathVariable(name="user_id") Integer userId,
 						@PathVariable(name="id") Integer id) {
-		if(t.getId() != null) {
-			if(t.getId().equals(id)) {
-				final Chicken c = chickenMapper.map(t);
-				chickenService.update(c);
-				userService.addNewAnimal(c, userId);
-			} else {
-				throw new NullPointerException();
-			}
-		} else {
-			throw new NullPointerException();
-		}
-		
+		final Chicken c = chickenMapper.map(t);
+		chickenService.update(c,id);
+		userService.addNewAnimal(c, userId);
 	}
 
 	@Override

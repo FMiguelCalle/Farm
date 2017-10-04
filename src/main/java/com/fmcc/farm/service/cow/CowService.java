@@ -9,7 +9,7 @@ public interface CowService {
 	
 	Cow create(Cow t);
 
-	void update(Cow t);
+	void update(Cow t, Integer pathId);
 
 	List<Cow> getAll(Integer userId, Integer page, Integer size);
 

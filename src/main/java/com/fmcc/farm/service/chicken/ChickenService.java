@@ -9,7 +9,7 @@ public interface ChickenService {
 
 	Chicken create(Chicken t);
 
-	void update(Chicken t);
+	void update(Chicken t, Integer pathId);
 
 	List<Chicken> getAll(Integer userId, Integer page, Integer size);
 

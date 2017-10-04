@@ -61,19 +61,8 @@ public class CowControllerImpl implements CowController{
 	public void update(@RequestBody CowDTO t, 
 						@PathVariable(name="user_id") Integer userId,
 						@PathVariable(name="id") Integer id) {
-		if(t.getId() != null) {
-			if(t.getId().equals(id)) {
-				final Cow c = cowMapper.map(t);
-				cowService.update(c);
-				userService.addNewAnimal(c, userId);
-			} else {
-				throw new NullPointerException();
-			}
-		} else {
-			throw new NullPointerException();
-		}
 		final Cow c = cowMapper.map(t);
-		cowService.update(c);
+		cowService.update(c,id);
 		userService.addNewAnimal(c, userId);	
 	}
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.CowDAO;
 import com.fmcc.farm.model.Cow;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
@@ -20,6 +21,9 @@ public class CowServiceImpl implements CowService{
 	
 	@Autowired
 	private PageAndSizeValidator pageAndSizeValidator;
+	
+	@Autowired
+	private PathIdAndDTOIdMatchValidator idValidator;
 
 	@Override
 	public Cow create(Cow t) {
@@ -27,8 +31,10 @@ public class CowServiceImpl implements CowService{
 	}
 
 	@Override
-	public void update(Cow t) {
-		dao.save(t);
+	public void update(Cow t, Integer pathId) {
+		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+			dao.save(t);	
+		}
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class CowServiceImpl implements CowService{
 		final List<Production> productions = c.getProductions();
 		productions.add(p);
 		c.setProductions(productions);
-		update(c);
+		update(c,animalId);
 	}
 
 	@Override
