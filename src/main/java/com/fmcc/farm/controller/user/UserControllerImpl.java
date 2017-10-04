@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fmcc.farm.dto.UserDTO;
 import com.fmcc.farm.mappers.user.UserMapper;
 import com.fmcc.farm.service.user.UserService;
-import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @RestController
 @RequestMapping(value="/user")
@@ -26,9 +25,6 @@ public class UserControllerImpl implements UserController{
 	@Autowired
 	private UserMapper userMapper;
 	
-	@Autowired
-	private PageAndSizeValidator pageAndSizeValidator;
-
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public UserDTO create(@RequestBody UserDTO t) {
@@ -37,42 +33,22 @@ public class UserControllerImpl implements UserController{
 
 	@RequestMapping(method = RequestMethod.DELETE, value="/{id}")
 	public void delete(@RequestBody UserDTO t, @PathVariable(name="id") Integer id) {
-		if(t.getId() != null) {
-			if(t.getId().equals(id)) {
-				userService.delete(userMapper.map(t));
-			}
-			else {
-				throw new NullPointerException();
-			}
-		} else {
-			throw new NullPointerException();
-		}
+		userService.delete(userMapper.map(t),id);
 	}
 	
 	@Override
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
 	public void update(@RequestBody UserDTO t, @PathVariable(name="id") Integer id) {
-		if(t.getId() != null) {
-			if(t.getId().equals(id)) {
-				userService.update(userMapper.map(t));
-			}
-			else {
-				throw new NullPointerException();
-			}
-		} else {
-			throw new NullPointerException();
-		}
+		userService.update(userMapper.map(t),id);
 	}
 
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
 	public List<UserDTO> getAll(@RequestParam(name="page",defaultValue="1") Integer page,@RequestParam(name="size",defaultValue="5") Integer size) {
 		final List<UserDTO> dtos = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			userService.getAll(page,size).forEach(u -> {
-				dtos.add(userMapper.map(u));
-			});
-		}
+		userService.getAll(page,size).forEach(u -> {
+			dtos.add(userMapper.map(u));
+		});
 		return dtos;
 	}
 

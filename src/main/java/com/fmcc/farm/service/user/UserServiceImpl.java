@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.UserDAO;
 import com.fmcc.farm.model.Animal;
 import com.fmcc.farm.model.User;
+import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 
@@ -22,19 +23,26 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private PageAndSizeValidator pageAndSizeValidator;
 	
+	@Autowired
+	private PathIdAndDTOIdMatchValidator idValidator;
+	
 	@Override
 	public User create(User t) {
 		return dao.save(t);	
 	}   
 
 	@Override
-	public void delete(User t) {
-		dao.delete(t);
+	public void delete(User t, Integer pathId) {
+		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+			dao.delete(t);
+		}
 	}
 
 	@Override
-	public void update(User t) {
-		dao.save(t);
+	public void update(User t, Integer pathId) {
+		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+			dao.save(t);
+		}
 	}
 
 	@Override
@@ -57,7 +65,7 @@ public class UserServiceImpl implements UserService{
 		final List<Animal> animals = u.getAnimals();
 		animals.add(a);
 		u.setAnimals(animals);
-		update(u);		
+		update(u,userId);		
 	}
 
 

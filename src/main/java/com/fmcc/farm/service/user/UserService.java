@@ -9,9 +9,9 @@ public interface UserService{
 
 	User create(User t);
 
-	void delete(User t);
+	void delete(User t, Integer pathId);
 
-	void update(User t);
+	void update(User t, Integer pathId);
 
 	List<User> getAll(Integer page, Integer size);
 
