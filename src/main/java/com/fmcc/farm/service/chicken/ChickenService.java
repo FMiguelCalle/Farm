@@ -17,5 +17,5 @@ public interface ChickenService {
 	
 	void addNewProduction(Production p, Integer animalId);
 
-	List<Chicken> findAllByUserId(Integer userId, Integer page, Integer size);
+	Chicken findByIdAndUserId(Integer id, Integer userId);
 }

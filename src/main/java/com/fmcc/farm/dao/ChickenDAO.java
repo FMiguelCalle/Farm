@@ -12,4 +12,6 @@ public interface ChickenDAO extends PagingAndSortingRepository<Chicken, Integer>
 
 	public Page<Chicken> findAllByUserId(Integer userId,Pageable p);
 	
+	public Chicken findByIdAndUserId(Integer id, Integer userId);
+	
 }

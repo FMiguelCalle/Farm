@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.fmcc.farm.dao.ProductionDAO;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.service.chicken.ChickenService;
+import com.fmcc.farm.service.cow.CowService;
+import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
+import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
@@ -20,19 +24,46 @@ public class ProductionServiceImpl implements ProductionService{
 	@Autowired
 	private PageAndSizeValidator pageAndSizeValidator;
 
+	@Autowired
+	private PathIdAndDTOIdMatchValidator idValidator;
+	
+	@Autowired
+	private NotNullValidator notNullValidator;
+	
+	@Autowired
+	private ChickenService chickenService;
+	
+	@Autowired
+	private CowService cowService;
+	
 	@Override
-	public Production create(Production t) {
-		return dao.save(t);
+	public Production create(Production t, Integer animalId, String animalType) {
+		final Production p = dao.save(t);
+		if(animalType.equals("chicken")) {
+			chickenService.addNewProduction(p, animalId);
+		}else {
+			cowService.addNewProduction(p, animalId);
+		}
+		return p;
 	}
 
 	@Override
-	public void delete(Production t) {
-		dao.delete(t);		
+	public void delete(Production t, Integer pathId) {
+		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+			dao.delete(t);		
+		}
 	}
 
 	@Override
-	public void update(Production t) {
-		dao.save(t);
+	public void update(Production t, Integer pathId, Integer animalId, String animalType) {
+		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+			Production p = dao.save(t);
+			if(animalType.equals("chicken")) {
+				chickenService.addNewProduction(p, animalId);
+			}else {
+				cowService.addNewProduction(p, animalId);
+			}
+		}
 	}
 
 	@Override
@@ -47,7 +78,27 @@ public class ProductionServiceImpl implements ProductionService{
 	}
 
 	@Override
-	public Production findById(Integer id){
+	public Production findByIdAndAnimalIdAndAnimalTypeAndUserId(Integer id, Integer animalId, String animalType, Integer userId) {		
+		if(animalType.equals("chicken")) {
+			chickenService.findByIdAndUserId(animalId, userId);
+			Production p = dao.findByIdAndAnimalId(id, animalId);
+			if(notNullValidator.validateNotNull(p)) {
+				return p;
+			}
+		} else {
+			if(animalType.equals("cow")){
+				cowService.findByIdAndUserId(animalId, userId);
+				Production p = dao.findByIdAndAnimalId(id, animalId);
+				if(notNullValidator.validateNotNull(p)) {
+					return p;
+				}
+			}
+		}
+		return new Production();
+	}
+	
+	@Override
+	public Production findById(Integer id) {		
 		return dao.findOne(id);
 	}
 

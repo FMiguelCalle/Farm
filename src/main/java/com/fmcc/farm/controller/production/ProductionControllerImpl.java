@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fmcc.farm.dto.ProductionDTO;
 import com.fmcc.farm.mappers.production.ProductionMapper;
 import com.fmcc.farm.model.Production;
-import com.fmcc.farm.service.chicken.ChickenService;
-import com.fmcc.farm.service.cow.CowService;
 import com.fmcc.farm.service.production.ProductionService;
 
 @RestController
@@ -27,41 +25,20 @@ public class ProductionControllerImpl implements ProductionController {
 	
 	@Autowired
 	private ProductionMapper productionMapper;
-	
-	@Autowired
-	private ChickenService chickenService;
-	
-	@Autowired
-	private CowService cowService;
 
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public ProductionDTO create(@RequestBody ProductionDTO t,
 								@PathVariable(name="animal_id") Integer animalId,
 								@PathVariable(name="animal_type") String animalType) {
-		final Production p= productionService.create(productionMapper.map(t));
-		if(animalType.equals("chicken")) {
-			chickenService.addNewProduction(p, animalId);
-		}else {
-			cowService.addNewProduction(p, animalId);
-		}
+		final Production p = productionService.create(productionMapper.map(t), animalId, animalType);
 		return productionMapper.map(p);
 	}
 
 	
 	@RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
 	public void delete(ProductionDTO t, @PathVariable(name="id") Integer id) {
-		
-		if(t.getId() != null) {
-			if(t.getId().equals(id)) {
-				productionService.delete(productionMapper.map(t));
-			}
-			else {
-				throw new NullPointerException();
-			}
-		} else {
-			throw new NullPointerException();
-		}
+		productionService.delete(productionMapper.map(t),id);
 	}
 
 	@Override
@@ -70,21 +47,8 @@ public class ProductionControllerImpl implements ProductionController {
 						@PathVariable(name="animal_id") Integer animalId,
 						@PathVariable(name="animal_type") String animalType,
 						@PathVariable(name="id") Integer id) {
-		if(t.getId() != null) {
-			if(t.getId().equals(id)) {
-				final Production p = productionMapper.map(t);
-				productionService.update(p);
-				if(animalType.equals("chicken")) {
-					chickenService.addNewProduction(p, animalId);
-				}else {
-					cowService.addNewProduction(p, animalId);
-				}
-			} else {
-				throw new NullPointerException();
-			}
-		} else {
-			throw new NullPointerException();
-		}
+		final Production p = productionMapper.map(t);
+		productionService.update(p,id,animalId,animalType);
 	}
 
 	@Override
@@ -93,7 +57,7 @@ public class ProductionControllerImpl implements ProductionController {
 										@RequestParam(name="page",defaultValue="1") Integer page, 
 										@RequestParam(name="size",defaultValue="5") Integer size) {
 		List<ProductionDTO> dtos = new ArrayList<>();
-		productionService.getAll(animalId,page-1,size).forEach(prod -> {
+		productionService.getAll(animalId,page,size).forEach(prod -> {
 			dtos.add(productionMapper.map(prod));
 		});	
 		return dtos;
@@ -101,8 +65,11 @@ public class ProductionControllerImpl implements ProductionController {
 
 	@Override
 	@RequestMapping(method = RequestMethod.GET,value="/{id}")
-	public ProductionDTO findById(@PathVariable Integer id){
-		return productionMapper.map(productionService.findById(id));
+	public ProductionDTO findById(@PathVariable Integer id, 
+									@PathVariable(name="animal_id") Integer animalId,
+									@PathVariable(name="animal_type") String animalType,
+									@PathVariable(name="user_id") Integer userId){
+		return productionMapper.map(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(id, animalId, animalType, userId));
 	}
 	
 	

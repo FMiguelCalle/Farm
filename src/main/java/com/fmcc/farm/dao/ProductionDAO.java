@@ -15,6 +15,8 @@ public interface ProductionDAO extends PagingAndSortingRepository<Production, In
 
 	public Page<Production> findAllByAnimalId(Integer animalId, Pageable p);
 
+	public Production findByIdAndAnimalId(Integer id, Integer animalId);
+	
 	@Query(value="select sum(p.sellingPrice-p.purchasePrice),p.animalId from Production as p group by p.animalId")
 	public List<Production> findAllGroupByAnimalIdOrderByEarning();
 }

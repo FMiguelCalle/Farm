@@ -14,7 +14,7 @@ public interface ProductionController {
 	
 	List<ProductionDTO> getAll(Integer animalId, Integer page, Integer size);
 
-	ProductionDTO findById(Integer id);
+	ProductionDTO findById(Integer id, Integer animalId, String animalType, Integer userId);
 
 
 }

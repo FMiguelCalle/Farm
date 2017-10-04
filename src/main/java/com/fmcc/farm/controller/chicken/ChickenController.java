@@ -14,7 +14,7 @@ public interface ChickenController {
 
 	List<ChickenDTO> getAll(Integer page, Integer size, Integer userId);
 
-	ChickenDTO findById(Integer id);
+	ChickenDTO findById(Integer id, Integer userId);
 
 
 }

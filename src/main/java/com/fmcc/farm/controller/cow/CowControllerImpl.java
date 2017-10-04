@@ -72,7 +72,7 @@ public class CowControllerImpl implements CowController{
 								@RequestParam(name="size",defaultValue="5") Integer size,
 								@PathVariable(name="user_id") Integer userId) {
 		final List<CowDTO> dtos = new ArrayList<>();
-		cowService.getAll(userId,page-1,size).forEach(c -> {
+		cowService.getAll(userId,page,size).forEach(c -> {
 			dtos.add(cowMapper.map(c));
 		});
 		return dtos;
@@ -80,8 +80,9 @@ public class CowControllerImpl implements CowController{
 
 	@Override
 	@RequestMapping(method = RequestMethod.GET,value = "/{id}")
-	public CowDTO findById(@PathVariable Integer id) {
-		return cowMapper.map(cowService.findById(id));
+	public CowDTO findById(@PathVariable(name="id") Integer id,
+							@PathVariable(name="user_id") Integer userId) {
+		return cowMapper.map(cowService.findByIdAndUserId(id, userId));
 	}
 
 }

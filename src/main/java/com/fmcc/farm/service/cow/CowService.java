@@ -13,10 +13,10 @@ public interface CowService {
 
 	List<Cow> getAll(Integer userId, Integer page, Integer size);
 
+	void addNewProduction(Production p, Integer animalId);
+
 	Cow findById(Integer id);
 	
-	void addNewProduction(Production p, Integer animalId);
-	
-	List<Cow> findAllByUserId(Integer userId, Integer page, Integer size);
-	
+	Cow findByIdAndUserId(Integer id, Integer userId);
+
 }

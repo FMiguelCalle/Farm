@@ -14,6 +14,6 @@ public interface CowController {
 
 	List<CowDTO> getAll(Integer page, Integer size, Integer userId);
 
-	CowDTO findById(Integer id);
+	CowDTO findById(Integer id, Integer userId);
 
 }

@@ -11,6 +11,7 @@ import com.fmcc.farm.dao.CowDAO;
 import com.fmcc.farm.model.Cow;
 import com.fmcc.farm.model.Production;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
+import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
@@ -24,6 +25,9 @@ public class CowServiceImpl implements CowService{
 	
 	@Autowired
 	private PathIdAndDTOIdMatchValidator idValidator;
+	
+	@Autowired
+	private NotNullValidator notNullValidator;
 
 	@Override
 	public Cow create(Cow t) {
@@ -52,6 +56,16 @@ public class CowServiceImpl implements CowService{
 	public Cow findById(Integer id) {
 		return dao.findOne(id);
 	}
+	
+	@Override
+	public Cow findByIdAndUserId(Integer id, Integer userId) {
+		Cow cow = dao.findByIdAndUserId(id, userId);
+		if(notNullValidator.validateNotNull(cow)) {
+			return cow;
+		} else {
+			return new Cow();
+		}
+	}
 
 	@Override
 	public void addNewProduction(Production p, Integer animalId) {
@@ -60,17 +74,6 @@ public class CowServiceImpl implements CowService{
 		productions.add(p);
 		c.setProductions(productions);
 		update(c,animalId);
-	}
-
-	@Override
-	public List<Cow> findAllByUserId(Integer userId, Integer page, Integer size) {
-		final List<Cow> cows = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.findAllByUserId(userId, new PageRequest(page-1,size)).forEach(c -> {
-				cows.add(c);
-			});
-		}
-		return cows;
 	}
 
 }

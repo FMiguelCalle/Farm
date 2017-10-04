@@ -72,15 +72,17 @@ public class ChickenControllerImpl implements ChickenController{
 									@RequestParam(name="size",defaultValue="5") Integer size,
 									@PathVariable(name="user_id") Integer userId) {
 		final List<ChickenDTO> dtos = new ArrayList<>();
-		chickenService.getAll(userId,page, size).forEach(c -> 
-		dtos.add(chickenMapper.map(c)));
+		chickenService.getAll(userId,page, size).forEach(c -> { 
+			dtos.add(chickenMapper.map(c));
+		});
 		return dtos;
 	}
 
 	@Override
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
-	public ChickenDTO findById(@PathVariable Integer id) {
-		return chickenMapper.map(chickenService.findById(id));
+	public ChickenDTO findById(@PathVariable(name="id") Integer id,
+								@PathVariable(name="user_id") Integer userId) {
+		return chickenMapper.map(chickenService.findByIdAndUserId(id, userId));
 	}
 
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.ChickenDAO;
 import com.fmcc.farm.model.Chicken;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.service.user.UserService;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
+import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 @Service
@@ -24,6 +26,12 @@ public class ChickenServiceImpl implements ChickenService{
 	
 	@Autowired
 	private PathIdAndDTOIdMatchValidator idValidator;
+	
+	@Autowired
+	private NotNullValidator notNullValidator;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Override
 	public Chicken create(Chicken t) {	
@@ -61,16 +69,15 @@ public class ChickenServiceImpl implements ChickenService{
 		c.setProductions(productions);
 		update(c,animalId);
 	}
-	
+
 	@Override
-	public List<Chicken> findAllByUserId(Integer userId, Integer page, Integer size) {
-		final List<Chicken> chickens = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.findAllByUserId(userId, new PageRequest(page-1,size)).forEach(c -> {
-				chickens.add(c);
-			});
+	public Chicken findByIdAndUserId(Integer id, Integer userId) {
+		Chicken chicken = dao.findByIdAndUserId(id, userId);
+		if(notNullValidator.validateNotNull(chicken)) {
+			return chicken;
+		}else {
+			return new Chicken();
 		}
-		return chickens;
 	}
 
 }

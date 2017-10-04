@@ -11,6 +11,7 @@ import com.fmcc.farm.dao.UserDAO;
 import com.fmcc.farm.model.Animal;
 import com.fmcc.farm.model.User;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
+import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
 
@@ -25,6 +26,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private PathIdAndDTOIdMatchValidator idValidator;
+	
+	@Autowired
+	private NotNullValidator notNullValidator;
 	
 	@Override
 	public User create(User t) {
@@ -56,7 +60,12 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User findById(Integer id) {
-		return dao.findOne(id);
+		User user = dao.findOne(id);
+		if(notNullValidator.validateNotNull(user)) {
+			return user;
+		} else {
+			return new User();
+		}
 	}
 
 	@Override
