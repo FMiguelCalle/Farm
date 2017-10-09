@@ -31,13 +31,13 @@ public class UrlElementsExistValidatorImpl implements UrlElementsExistValidator 
 	public Boolean validateUrlElementsExistence(Integer userId, Integer animalId, String animalType) {
 		if(notNullValidator.validateNotNull(userService.findById(userId))) {
 			if(animalType.equals("chicken")) {
-				if(notNullValidator.validateNotNull(chickenService.findById(animalId))) {
+				if(notNullValidator.validateNotNull(chickenService.findByIdAndUserId(animalId, userId))) {
 					return new Boolean(true);
 				} else {
 					return new Boolean(false);
 				}
 			} else if (animalType.equals("cow")) {
-				if(notNullValidator.validateNotNull(cowService.findById(animalId))) {
+				if(notNullValidator.validateNotNull(cowService.findByIdAndUserId(animalId, userId))) {
 					return new Boolean(true);
 				} else {
 					return new Boolean(false);
@@ -53,7 +53,7 @@ public class UrlElementsExistValidatorImpl implements UrlElementsExistValidator 
 	@Override
 	public Boolean validateUrlElementsExistence(Integer userId, Integer animalId, String animalType, Integer productionId) {
 		if(validateUrlElementsExistence(userId, animalId, animalType) &&
-				notNullValidator.validateNotNull(productionService.findById(productionId))) {
+				notNullValidator.validateNotNull(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(productionId, animalId, animalType, userId))) {
 			return new Boolean(true);
 		} else {
 			return new Boolean(false);
