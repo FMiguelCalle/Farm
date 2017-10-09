@@ -34,14 +34,17 @@ public class ChickenServiceImpl implements ChickenService{
 	private UserService userService;
 	
 	@Override
-	public Chicken create(Chicken t) {	
-		return dao.save(t);
+	public Chicken create(Chicken t, Integer userId) {	
+		final Chicken chicken = dao.save(t);
+		userService.addNewAnimal(t, userId);
+		return chicken;
 	}
 
 	@Override
-	public void update(Chicken t, Integer pathId) {
+	public void update(Chicken t, Integer pathId, Integer userId) {
 		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
 			dao.save(t);
+			userService.addNewAnimal(t, userId);
 		}
 	}
 
@@ -62,12 +65,12 @@ public class ChickenServiceImpl implements ChickenService{
 	}
 
 	@Override
-	public void addNewProduction(Production p, Integer animalId) {
+	public void addNewProduction(Production p, Integer animalId, Integer userId) {
 		Chicken c = findById(animalId);
 		final List<Production> productions = c.getProductions();
 		productions.add(p);
 		c.setProductions(productions);
-		update(c,animalId);
+		update(c,animalId,userId);
 	}
 
 	@Override

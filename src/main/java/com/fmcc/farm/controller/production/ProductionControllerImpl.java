@@ -30,8 +30,9 @@ public class ProductionControllerImpl implements ProductionController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ProductionDTO create(@RequestBody ProductionDTO t,
 								@PathVariable(name="animal_id") Integer animalId,
-								@PathVariable(name="animal_type") String animalType) {
-		final Production p = productionService.create(productionMapper.map(t), animalId, animalType);
+								@PathVariable(name="animal_type") String animalType,
+								@PathVariable(name="user_id") Integer userId) {
+		final Production p = productionService.create(productionMapper.map(t), animalId, animalType, userId);
 		return productionMapper.map(p);
 	}
 
@@ -46,9 +47,10 @@ public class ProductionControllerImpl implements ProductionController {
 	public void update(@RequestBody ProductionDTO t,
 						@PathVariable(name="animal_id") Integer animalId,
 						@PathVariable(name="animal_type") String animalType,
-						@PathVariable(name="id") Integer id) {
+						@PathVariable(name="id") Integer id,
+						@PathVariable(name="user_id") Integer userId) {
 		final Production p = productionMapper.map(t);
-		productionService.update(p,id,animalId,animalType);
+		productionService.update(p,id,animalId,animalType,userId);
 	}
 
 	@Override

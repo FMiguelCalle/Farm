@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fmcc.farm.dao.CowDAO;
 import com.fmcc.farm.model.Cow;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.service.user.UserService;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
@@ -28,16 +29,22 @@ public class CowServiceImpl implements CowService{
 	
 	@Autowired
 	private NotNullValidator notNullValidator;
+	
+	@Autowired
+	private UserService userService;
 
 	@Override
-	public Cow create(Cow t) {
-		return dao.save(t);
+	public Cow create(Cow t, Integer userId) {
+		final Cow cow = dao.save(t);
+		userService.addNewAnimal(t, userId);
+		return cow;
 	}
 
 	@Override
-	public void update(Cow t, Integer pathId) {
+	public void update(Cow t, Integer pathId, Integer userId) {
 		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
-			dao.save(t);	
+			dao.save(t);
+			userService.addNewAnimal(t, userId);
 		}
 	}
 
@@ -68,12 +75,12 @@ public class CowServiceImpl implements CowService{
 	}
 
 	@Override
-	public void addNewProduction(Production p, Integer animalId) {
+	public void addNewProduction(Production p, Integer animalId, Integer userId) {
 		Cow c = findById(animalId);
 		final List<Production> productions = c.getProductions();
 		productions.add(p);
 		c.setProductions(productions);
-		update(c,animalId);
+		update(c, animalId, userId);
 	}
 
 }

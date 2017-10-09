@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService{
 	public List<User> getAll(Integer page, Integer size) {
 		final List<User> users = new ArrayList<>();
 		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.findAll(new PageRequest(page-1, size)).forEach(c -> users.add(c));
+			dao.findAll(new PageRequest(page-1, size)).forEach(c -> {	
+				users.add(c);
+			});
 		}
 		return users;
 	}

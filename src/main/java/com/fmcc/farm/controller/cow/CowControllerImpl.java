@@ -17,7 +17,6 @@ import com.fmcc.farm.dto.CowDTO;
 import com.fmcc.farm.mappers.cow.CowMapper;
 import com.fmcc.farm.model.Cow;
 import com.fmcc.farm.service.cow.CowService;
-import com.fmcc.farm.service.user.UserService;
 
 @RestController
 @RequestMapping(value="user/{user_id}/animal/cow")
@@ -28,16 +27,12 @@ public class CowControllerImpl implements CowController{
 	
 	@Autowired
 	private CowMapper cowMapper;
-	
-	@Autowired
-	private UserService userService;
 
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public CowDTO create(@RequestBody CowDTO t, 
 							@PathVariable(name="user_id") Integer userId) {
-		final Cow c = cowService.create(cowMapper.map(t));
-		userService.addNewAnimal(c, userId);
+		final Cow c = cowService.create(cowMapper.map(t), userId);
 		return cowMapper.map(c);
 	}
 
@@ -62,8 +57,7 @@ public class CowControllerImpl implements CowController{
 						@PathVariable(name="user_id") Integer userId,
 						@PathVariable(name="id") Integer id) {
 		final Cow c = cowMapper.map(t);
-		cowService.update(c,id);
-		userService.addNewAnimal(c, userId);	
+		cowService.update(c,id,userId);	
 	}
 
 	@Override

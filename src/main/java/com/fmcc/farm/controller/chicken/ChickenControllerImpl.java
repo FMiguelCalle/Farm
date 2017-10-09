@@ -17,7 +17,6 @@ import com.fmcc.farm.dto.ChickenDTO;
 import com.fmcc.farm.mappers.chicken.ChickenMapper;
 import com.fmcc.farm.model.Chicken;
 import com.fmcc.farm.service.chicken.ChickenService;
-import com.fmcc.farm.service.user.UserService;
 
 @RestController
 @RequestMapping(value="/user/{user_id}/animal/chicken")
@@ -28,16 +27,12 @@ public class ChickenControllerImpl implements ChickenController{
 	
 	@Autowired
 	private ChickenMapper chickenMapper;
-
-	@Autowired
-	private UserService userService;
 	
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public ChickenDTO create(@RequestBody ChickenDTO t, 
 								@PathVariable(name="user_id") Integer userId) {
-		final Chicken c = chickenService.create(chickenMapper.map(t));
-		userService.addNewAnimal(c, userId);
+		final Chicken c = chickenService.create(chickenMapper.map(t),userId);
 		return chickenMapper.map(c);
 	}
 
@@ -62,8 +57,7 @@ public class ChickenControllerImpl implements ChickenController{
 						@PathVariable(name="user_id") Integer userId,
 						@PathVariable(name="id") Integer id) {
 		final Chicken c = chickenMapper.map(t);
-		chickenService.update(c,id);
-		userService.addNewAnimal(c, userId);
+		chickenService.update(c, id, userId);
 	}
 
 	@Override

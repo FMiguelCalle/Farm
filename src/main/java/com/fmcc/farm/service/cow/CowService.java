@@ -7,14 +7,14 @@ import com.fmcc.farm.model.Production;
 
 public interface CowService {
 	
-	Cow create(Cow t);
+	Cow create(Cow t, Integer userId);
 
-	void update(Cow t, Integer pathId);
+	void update(Cow t, Integer pathId, Integer userId);
 
 	List<Cow> getAll(Integer userId, Integer page, Integer size);
 
-	void addNewProduction(Production p, Integer animalId);
-
+	void addNewProduction(Production p, Integer animalId, Integer userId);
+	
 	Cow findById(Integer id);
 	
 	Cow findByIdAndUserId(Integer id, Integer userId);

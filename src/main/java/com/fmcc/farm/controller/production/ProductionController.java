@@ -6,11 +6,11 @@ import com.fmcc.farm.dto.ProductionDTO;
 
 public interface ProductionController {
 
-	ProductionDTO create(ProductionDTO t, Integer animalId, String animalType);
+	ProductionDTO create(ProductionDTO t, Integer animalId, String animalType, Integer userId);
 
+	void update(ProductionDTO t, Integer animalId, String animalType, Integer id, Integer userId);
+	
 	void delete(ProductionDTO t, Integer id);
-
-	void update(ProductionDTO t, Integer animalId, String animalType, Integer id);
 	
 	List<ProductionDTO> getAll(Integer animalId, Integer page, Integer size);
 

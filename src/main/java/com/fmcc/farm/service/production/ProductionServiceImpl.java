@@ -37,12 +37,12 @@ public class ProductionServiceImpl implements ProductionService{
 	private CowService cowService;
 	
 	@Override
-	public Production create(Production t, Integer animalId, String animalType) {
+	public Production create(Production t, Integer animalId, String animalType, Integer userId) {
 		final Production p = dao.save(t);
 		if(animalType.equals("chicken")) {
-			chickenService.addNewProduction(p, animalId);
+			chickenService.addNewProduction(p, animalId, userId);
 		}else {
-			cowService.addNewProduction(p, animalId);
+			cowService.addNewProduction(p, animalId, userId);
 		}
 		return p;
 	}
@@ -55,13 +55,13 @@ public class ProductionServiceImpl implements ProductionService{
 	}
 
 	@Override
-	public void update(Production t, Integer pathId, Integer animalId, String animalType) {
+	public void update(Production t, Integer pathId, Integer animalId, String animalType, Integer userId) {
 		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
 			Production p = dao.save(t);
 			if(animalType.equals("chicken")) {
-				chickenService.addNewProduction(p, animalId);
+				chickenService.addNewProduction(p, animalId, userId);
 			}else {
-				cowService.addNewProduction(p, animalId);
+				cowService.addNewProduction(p, animalId, userId);
 			}
 		}
 	}
