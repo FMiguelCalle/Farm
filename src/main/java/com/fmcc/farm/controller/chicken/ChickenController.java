@@ -6,15 +6,15 @@ import com.fmcc.farm.dto.ChickenDTO;
 
 public interface ChickenController {
 
-	ChickenDTO create(ChickenDTO t, Integer userId);
+	ChickenDTO create(ChickenDTO t, Integer userId) throws NullPointerException;
 
 	void delete(ChickenDTO t);
 	
-	void update(ChickenDTO t, Integer userId, Integer id);
+	void update(ChickenDTO t, Integer userId, Integer id) throws NullPointerException;
 
 	List<ChickenDTO> getAll(Integer page, Integer size, Integer userId);
 
-	ChickenDTO findById(Integer id, Integer userId);
+	ChickenDTO findById(Integer id, Integer userId) throws NullPointerException;
 
 
 }

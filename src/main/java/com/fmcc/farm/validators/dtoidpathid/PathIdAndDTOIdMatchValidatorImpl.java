@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class PathIdAndDTOIdMatchValidatorImpl implements PathIdAndDTOIdMatchValidator{
 
 	@Override
-	public Boolean validateMatchingIds(Integer objectId, Integer pathId) {
+	public Boolean validateMatchingIds(Integer objectId, Integer pathId) throws NullPointerException{
 		if(objectId != null && pathId != null) {
 			if(objectId.equals(pathId)) {
 				return new Boolean(true);

@@ -31,7 +31,7 @@ public class CowControllerImpl implements CowController{
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public CowDTO create(@RequestBody CowDTO t, 
-							@PathVariable(name="user_id") Integer userId) {
+							@PathVariable(name="user_id") Integer userId) throws NullPointerException{
 		final Cow c = cowService.create(cowMapper.map(t), userId);
 		return cowMapper.map(c);
 	}
@@ -40,7 +40,7 @@ public class CowControllerImpl implements CowController{
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(value = HttpStatus.UNAUTHORIZED,
 					reason = "Delete request not allowed.")
-	public void delete(@RequestBody CowDTO t) {
+	public void delete(@RequestBody CowDTO t){
 		//Nothing to do.		
 	}
 	
@@ -55,7 +55,7 @@ public class CowControllerImpl implements CowController{
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
 	public void update(@RequestBody CowDTO t, 
 						@PathVariable(name="user_id") Integer userId,
-						@PathVariable(name="id") Integer id) {
+						@PathVariable(name="id") Integer id) throws NullPointerException{
 		final Cow c = cowMapper.map(t);
 		cowService.update(c,id,userId);	
 	}
@@ -64,7 +64,7 @@ public class CowControllerImpl implements CowController{
 	@RequestMapping(method = RequestMethod.GET)
 	public List<CowDTO> getAll(@RequestParam(name="page",defaultValue="1") Integer page,
 								@RequestParam(name="size",defaultValue="5") Integer size,
-								@PathVariable(name="user_id") Integer userId) {
+								@PathVariable(name="user_id") Integer userId){
 		final List<CowDTO> dtos = new ArrayList<>();
 		cowService.getAll(userId,page,size).forEach(c -> {
 			dtos.add(cowMapper.map(c));
@@ -75,7 +75,7 @@ public class CowControllerImpl implements CowController{
 	@Override
 	@RequestMapping(method = RequestMethod.GET,value = "/{id}")
 	public CowDTO findById(@PathVariable(name="id") Integer id,
-							@PathVariable(name="user_id") Integer userId) {
+							@PathVariable(name="user_id") Integer userId) throws NullPointerException {
 		return cowMapper.map(cowService.findByIdAndUserId(id, userId));
 	}
 

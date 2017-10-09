@@ -14,6 +14,7 @@ import com.fmcc.farm.service.cow.CowService;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
+import com.fmcc.farm.validators.urlelementexist.UrlElementsExistValidator;
 
 @Service
 public class ProductionServiceImpl implements ProductionService{
@@ -31,54 +32,68 @@ public class ProductionServiceImpl implements ProductionService{
 	private NotNullValidator notNullValidator;
 	
 	@Autowired
+	private UrlElementsExistValidator urlElementsExistValidator;
+	
+	@Autowired
 	private ChickenService chickenService;
 	
 	@Autowired
 	private CowService cowService;
 	
 	@Override
-	public Production create(Production t, Integer animalId, String animalType, Integer userId) {
-		final Production p = dao.save(t);
-		if(animalType.equals("chicken")) {
-			chickenService.addNewProduction(p, animalId, userId);
-		}else {
-			cowService.addNewProduction(p, animalId, userId);
+	public Production create(Production t, Integer animalId, String animalType, Integer userId) throws NullPointerException{
+		if(urlElementsExistValidator.validateUrlElementsExistence(userId, animalId, animalType)) {
+			final Production p = dao.save(t);
+			if(animalType.equals("chicken")) {
+				chickenService.addNewProduction(t, animalId, userId);
+			}else {
+				cowService.addNewProduction(t, animalId, userId);
+			}
+			return p;
+		} else {
+			return null;
 		}
-		return p;
+		
 	}
 
 	@Override
-	public void delete(Production t, Integer pathId) {
-		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+	public void delete(Production t, Integer pathId, Integer animalId, String animalType, Integer userId) throws NullPointerException{
+		if(idValidator.validateMatchingIds(t.getId(), pathId) &&
+				urlElementsExistValidator.validateUrlElementsExistence(userId, animalId, animalType, pathId)) {
 			dao.delete(t);		
 		}
 	}
 
 	@Override
-	public void update(Production t, Integer pathId, Integer animalId, String animalType, Integer userId) {
-		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
-			Production p = dao.save(t);
+	public void update(Production t, Integer pathId, Integer animalId, String animalType, Integer userId) throws NullPointerException{
+		if(idValidator.validateMatchingIds(t.getId(), pathId) &&
+				urlElementsExistValidator.validateUrlElementsExistence(userId, animalId, animalType, pathId)) {
+			dao.save(t);
 			if(animalType.equals("chicken")) {
-				chickenService.addNewProduction(p, animalId, userId);
+				chickenService.addNewProduction(t, animalId, userId);
 			}else {
-				cowService.addNewProduction(p, animalId, userId);
+				cowService.addNewProduction(t, animalId, userId);
 			}
 		}
 	}
 
 	@Override
-	public List<Production> getAll(Integer animalId, Integer page, Integer size) {
-		final List<Production> productions = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.findAllByAnimalId(animalId, new PageRequest(page-1, size)).forEach(production -> {
-				productions.add(production);
-			});
+	public List<Production> getAll(Integer animalId, String animalType, Integer userId, Integer page, Integer size) {
+		if(urlElementsExistValidator.validateUrlElementsExistence(userId, animalId, animalType)) {
+			final List<Production> productions = new ArrayList<>();
+			if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+				dao.findAllByAnimalId(animalId, new PageRequest(page-1, size)).forEach(production -> {
+					productions.add(production);
+				});
+			}
+			return productions;
+		} else {
+			return null;
 		}
-		return productions;
 	}
 
 	@Override
-	public Production findByIdAndAnimalIdAndAnimalTypeAndUserId(Integer id, Integer animalId, String animalType, Integer userId) {		
+	public Production findByIdAndAnimalIdAndAnimalTypeAndUserId(Integer id, Integer animalId, String animalType, Integer userId) throws NullPointerException{		
 		if(animalType.equals("chicken")) {
 			chickenService.findByIdAndUserId(animalId, userId);
 			Production p = dao.findByIdAndAnimalId(id, animalId);
@@ -94,11 +109,11 @@ public class ProductionServiceImpl implements ProductionService{
 				}
 			}
 		}
-		return new Production();
+		return null;
 	}
 	
 	@Override
-	public Production findById(Integer id) {		
+	public Production findById(Integer id) throws NullPointerException{
 		return dao.findOne(id);
 	}
 

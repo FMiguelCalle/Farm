@@ -14,6 +14,7 @@ import com.fmcc.farm.service.user.UserService;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
+import com.fmcc.farm.validators.urlelementexist.UrlElementsExistValidator;
 
 @Service
 public class ChickenServiceImpl implements ChickenService{
@@ -31,18 +32,27 @@ public class ChickenServiceImpl implements ChickenService{
 	private NotNullValidator notNullValidator;
 	
 	@Autowired
+	private UrlElementsExistValidator urlElementsExistValidator;
+	
+	@Autowired
 	private UserService userService;
 	
 	@Override
-	public Chicken create(Chicken t, Integer userId) {	
-		final Chicken chicken = dao.save(t);
-		userService.addNewAnimal(t, userId);
-		return chicken;
+	public Chicken create(Chicken t, Integer userId) throws NullPointerException{	
+		if(notNullValidator.validateNotNull(userService.findById(userId))) {
+			final Chicken chicken = dao.save(t);
+			userService.addNewAnimal(t, userId);
+			return chicken;
+		} else {
+			return null;
+		}
+		
 	}
 
 	@Override
-	public void update(Chicken t, Integer pathId, Integer userId) {
-		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+	public void update(Chicken t, Integer pathId, Integer userId) throws NullPointerException{
+		if(idValidator.validateMatchingIds(t.getId(), pathId) &&
+				urlElementsExistValidator.validateUrlElementsExistence(userId, pathId, "chicken")) {
 			dao.save(t);
 			userService.addNewAnimal(t, userId);
 		}
@@ -50,36 +60,42 @@ public class ChickenServiceImpl implements ChickenService{
 
 	@Override
 	public List<Chicken> getAll(Integer userId, Integer page, Integer size) {
-		final List<Chicken> chickens = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.findAllByUserId(userId, new PageRequest(page-1, size)).forEach(chicken -> {
-				chickens.add(chicken);
-			});
+		if(notNullValidator.validateNotNull(userService.findById(userId))) {
+			final List<Chicken> chickens = new ArrayList<>();
+			if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+				dao.findAllByUserId(userId, new PageRequest(page-1, size)).forEach(chicken -> {
+					chickens.add(chicken);
+				});
+			}
+			return chickens;
+		} else {
+			return null;
 		}
-		return chickens;
 	}
 
 	@Override
-	public Chicken findById(Integer id) {
+	public Chicken findById(Integer id){
 		return dao.findOne(id);
 	}
 
 	@Override
-	public void addNewProduction(Production p, Integer animalId, Integer userId) {
+	public void addNewProduction(Production p, Integer animalId, Integer userId) throws NullPointerException{
 		Chicken c = findById(animalId);
-		final List<Production> productions = c.getProductions();
-		productions.add(p);
-		c.setProductions(productions);
-		update(c,animalId,userId);
+		if(notNullValidator.validateNotNull(c)) {
+			final List<Production> productions = c.getProductions();
+			productions.add(p);
+			c.setProductions(productions);
+			update(c,animalId,userId);
+		}
 	}
 
 	@Override
-	public Chicken findByIdAndUserId(Integer id, Integer userId) {
+	public Chicken findByIdAndUserId(Integer id, Integer userId) throws NullPointerException{
 		Chicken chicken = dao.findByIdAndUserId(id, userId);
 		if(notNullValidator.validateNotNull(chicken)) {
 			return chicken;
 		}else {
-			return new Chicken();
+			return null;
 		}
 	}
 

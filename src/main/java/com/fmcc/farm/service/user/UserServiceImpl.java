@@ -14,7 +14,6 @@ import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
 
-
 @Service
 public class UserServiceImpl implements UserService{
 	
@@ -36,15 +35,17 @@ public class UserServiceImpl implements UserService{
 	}   
 
 	@Override
-	public void delete(User t, Integer pathId) {
-		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+	public void delete(User t, Integer pathId) throws NullPointerException{
+		if(idValidator.validateMatchingIds(t.getId(), pathId) &&
+				notNullValidator.validateNotNull(findById(pathId))) {
 			dao.delete(t);
 		}
 	}
 
 	@Override
-	public void update(User t, Integer pathId) {
-		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+	public void update(User t, Integer pathId) throws NullPointerException {
+		if(idValidator.validateMatchingIds(t.getId(), pathId) &&
+				notNullValidator.validateNotNull(findById(pathId))) {
 			dao.save(t);
 		}
 	}
@@ -63,21 +64,18 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User findById(Integer id) {
 		User user = dao.findOne(id);
-		if(notNullValidator.validateNotNull(user)) {
-			return user;
-		} else {
-			return new User();
-		}
+		return user;
 	}
 
 	@Override
-	public void addNewAnimal(Animal a, Integer userId) {
+	public void addNewAnimal(Animal a, Integer userId) throws NullPointerException{
 		User u = findById(userId);
-		final List<Animal> animals = u.getAnimals();
-		animals.add(a);
-		u.setAnimals(animals);
-		update(u,userId);		
+		if(notNullValidator.validateNotNull(u)) {
+			final List<Animal> animals = u.getAnimals();
+			animals.add(a);
+			u.setAnimals(animals);
+			update(u,userId);		
+		}
 	}
-
 
 }

@@ -31,15 +31,19 @@ public class ProductionControllerImpl implements ProductionController {
 	public ProductionDTO create(@RequestBody ProductionDTO t,
 								@PathVariable(name="animal_id") Integer animalId,
 								@PathVariable(name="animal_type") String animalType,
-								@PathVariable(name="user_id") Integer userId) {
+								@PathVariable(name="user_id") Integer userId) throws NullPointerException {
 		final Production p = productionService.create(productionMapper.map(t), animalId, animalType, userId);
 		return productionMapper.map(p);
 	}
 
 	
 	@RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
-	public void delete(ProductionDTO t, @PathVariable(name="id") Integer id) {
-		productionService.delete(productionMapper.map(t),id);
+	public void delete(ProductionDTO t, 
+						@PathVariable(name="id") Integer id,
+						@PathVariable(name="animal_id") Integer animalId,
+						@PathVariable(name="animal_type") String animalType,
+						@PathVariable(name="user_id") Integer userId) throws NullPointerException {
+		productionService.delete(productionMapper.map(t),id,animalId,animalType,userId);
 	}
 
 	@Override
@@ -48,18 +52,20 @@ public class ProductionControllerImpl implements ProductionController {
 						@PathVariable(name="animal_id") Integer animalId,
 						@PathVariable(name="animal_type") String animalType,
 						@PathVariable(name="id") Integer id,
-						@PathVariable(name="user_id") Integer userId) {
+						@PathVariable(name="user_id") Integer userId) throws NullPointerException{
 		final Production p = productionMapper.map(t);
 		productionService.update(p,id,animalId,animalType,userId);
 	}
 
 	@Override
 	@RequestMapping(method = RequestMethod.GET)
-	public List<ProductionDTO> getAll(@PathVariable(name="animal_id") Integer animalId, 
+	public List<ProductionDTO> getAll(@PathVariable(name="animal_id") Integer animalId,
+										@PathVariable(name="animal_type") String animalType,
+										@PathVariable(name="user_id") Integer userId,
 										@RequestParam(name="page",defaultValue="1") Integer page, 
 										@RequestParam(name="size",defaultValue="5") Integer size) {
 		List<ProductionDTO> dtos = new ArrayList<>();
-		productionService.getAll(animalId,page,size).forEach(prod -> {
+		productionService.getAll(animalId,animalType,userId,page,size).forEach(prod -> {
 			dtos.add(productionMapper.map(prod));
 		});	
 		return dtos;
@@ -70,9 +76,8 @@ public class ProductionControllerImpl implements ProductionController {
 	public ProductionDTO findById(@PathVariable Integer id, 
 									@PathVariable(name="animal_id") Integer animalId,
 									@PathVariable(name="animal_type") String animalType,
-									@PathVariable(name="user_id") Integer userId){
+									@PathVariable(name="user_id") Integer userId) throws NullPointerException{
 		return productionMapper.map(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(id, animalId, animalType, userId));
 	}
-	
 	
 }

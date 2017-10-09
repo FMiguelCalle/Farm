@@ -27,18 +27,18 @@ public class UserControllerImpl implements UserController{
 	
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
-	public UserDTO create(@RequestBody UserDTO t) {
+	public UserDTO create(@RequestBody UserDTO t) throws NullPointerException{
 		return userMapper.map(userService.create(userMapper.map(t)));
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value="/{id}")
-	public void delete(@RequestBody UserDTO t, @PathVariable(name="id") Integer id) {
+	public void delete(@RequestBody UserDTO t, @PathVariable(name="id") Integer id) throws NullPointerException{
 		userService.delete(userMapper.map(t),id);
 	}
 	
 	@Override
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public void update(@RequestBody UserDTO t, @PathVariable(name="id") Integer id) {
+	public void update(@RequestBody UserDTO t, @PathVariable(name="id") Integer id) throws NullPointerException{
 		userService.update(userMapper.map(t),id);
 	}
 
@@ -54,7 +54,7 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
-	public UserDTO findById(@PathVariable Integer id) {
+	public UserDTO findById(@PathVariable Integer id) throws NullPointerException {
 		return userMapper.map(userService.findById(id));
 	}
 

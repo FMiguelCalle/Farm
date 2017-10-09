@@ -14,6 +14,7 @@ import com.fmcc.farm.service.user.UserService;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
 import com.fmcc.farm.validators.notnull.NotNullValidator;
 import com.fmcc.farm.validators.pagesize.PageAndSizeValidator;
+import com.fmcc.farm.validators.urlelementexist.UrlElementsExistValidator;
 
 @Service
 public class CowServiceImpl implements CowService{
@@ -31,18 +32,26 @@ public class CowServiceImpl implements CowService{
 	private NotNullValidator notNullValidator;
 	
 	@Autowired
+	private UrlElementsExistValidator urlElementsExistValidator;
+	
+	@Autowired
 	private UserService userService;
 
 	@Override
-	public Cow create(Cow t, Integer userId) {
-		final Cow cow = dao.save(t);
-		userService.addNewAnimal(t, userId);
-		return cow;
+	public Cow create(Cow t, Integer userId) throws NullPointerException{
+		if(notNullValidator.validateNotNull(userService.findById(userId))) {
+			final Cow cow = dao.save(t);
+			userService.addNewAnimal(t, userId);
+			return cow;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public void update(Cow t, Integer pathId, Integer userId) {
-		if(idValidator.validateMatchingIds(t.getId(), pathId)) {
+	public void update(Cow t, Integer pathId, Integer userId) throws NullPointerException {
+		if(idValidator.validateMatchingIds(t.getId(), pathId) &&
+				urlElementsExistValidator.validateUrlElementsExistence(userId, pathId,"cow")) {
 			dao.save(t);
 			userService.addNewAnimal(t, userId);
 		}
@@ -50,37 +59,43 @@ public class CowServiceImpl implements CowService{
 
 	@Override
 	public List<Cow> getAll(Integer userId, Integer page, Integer size) {
-		final List<Cow> cows = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.findAllByUserId(userId, new PageRequest(page-1, size)).forEach(cow -> {
-				cows.add(cow);
-			});
+		if(notNullValidator.validateNotNull(userService.findById(userId))) {
+			final List<Cow> cows = new ArrayList<>();
+			if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+				dao.findAllByUserId(userId, new PageRequest(page-1, size)).forEach(cow -> {
+					cows.add(cow);
+				});
+			}
+			return cows;
+		} else {
+			return null;
 		}
-		return cows;
 	}
 
 	@Override
-	public Cow findById(Integer id) {
+	public Cow findById(Integer id) throws NullPointerException{
 		return dao.findOne(id);
 	}
 	
 	@Override
-	public Cow findByIdAndUserId(Integer id, Integer userId) {
+	public Cow findByIdAndUserId(Integer id, Integer userId) throws NullPointerException{
 		Cow cow = dao.findByIdAndUserId(id, userId);
 		if(notNullValidator.validateNotNull(cow)) {
 			return cow;
 		} else {
-			return new Cow();
+			return null;
 		}
 	}
 
 	@Override
-	public void addNewProduction(Production p, Integer animalId, Integer userId) {
+	public void addNewProduction(Production p, Integer animalId, Integer userId) throws NullPointerException {
 		Cow c = findById(animalId);
-		final List<Production> productions = c.getProductions();
-		productions.add(p);
-		c.setProductions(productions);
-		update(c, animalId, userId);
+		if(notNullValidator.validateNotNull(c)) {
+			final List<Production> productions = c.getProductions();
+			productions.add(p);
+			c.setProductions(productions);
+			update(c, animalId, userId);
+		}
 	}
 
 }

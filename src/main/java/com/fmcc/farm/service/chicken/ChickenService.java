@@ -7,16 +7,16 @@ import com.fmcc.farm.model.Production;
 
 public interface ChickenService {
 
-	Chicken create(Chicken t, Integer userId);
+	Chicken create(Chicken t, Integer userId) throws NullPointerException;
 	
-	void update(Chicken t, Integer pathId, Integer userId);
+	void update(Chicken t, Integer pathId, Integer userId) throws NullPointerException;
 	
 	List<Chicken> getAll(Integer userId, Integer page, Integer size);
 
-	Chicken findById(Integer id);
+	Chicken findById(Integer id) throws NullPointerException;
 	
-	void addNewProduction(Production p, Integer animalId, Integer userId);
+	void addNewProduction(Production p, Integer animalId, Integer userId) throws NullPointerException;
 	
-	Chicken findByIdAndUserId(Integer id, Integer userId);
+	Chicken findByIdAndUserId(Integer id, Integer userId) throws NullPointerException;
 
 }

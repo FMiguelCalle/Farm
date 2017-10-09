@@ -31,7 +31,7 @@ public class ChickenControllerImpl implements ChickenController{
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public ChickenDTO create(@RequestBody ChickenDTO t, 
-								@PathVariable(name="user_id") Integer userId) {
+								@PathVariable(name="user_id") Integer userId) throws NullPointerException{
 		final Chicken c = chickenService.create(chickenMapper.map(t),userId);
 		return chickenMapper.map(c);
 	}
@@ -55,7 +55,7 @@ public class ChickenControllerImpl implements ChickenController{
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
 	public void update(@RequestBody ChickenDTO t, 
 						@PathVariable(name="user_id") Integer userId,
-						@PathVariable(name="id") Integer id) {
+						@PathVariable(name="id") Integer id) throws NullPointerException{
 		final Chicken c = chickenMapper.map(t);
 		chickenService.update(c, id, userId);
 	}
@@ -75,7 +75,7 @@ public class ChickenControllerImpl implements ChickenController{
 	@Override
 	@RequestMapping(method = RequestMethod.GET, value="/{id}")
 	public ChickenDTO findById(@PathVariable(name="id") Integer id,
-								@PathVariable(name="user_id") Integer userId) {
+								@PathVariable(name="user_id") Integer userId) throws NullPointerException {
 		return chickenMapper.map(chickenService.findByIdAndUserId(id, userId));
 	}
 
