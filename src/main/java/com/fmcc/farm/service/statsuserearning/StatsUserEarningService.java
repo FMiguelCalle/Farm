@@ -3,10 +3,10 @@ package com.fmcc.farm.service.statsuserearning;
 import java.util.Date;
 import java.util.List;
 
-import com.fmcc.farm.dto.StatsUserEarningDTOPost;
+import com.fmcc.farm.dto.StatsUserEarningDTO;
 
 public interface StatsUserEarningService {
 	
-	List<StatsUserEarningDTOPost> usersEarningsBetweenDates(Date firstDate, Date lastDate, Integer page, Integer size);
+	List<StatsUserEarningDTO> usersEarningsBetweenDates(Date fromDate, Date toDate, Integer page, Integer size);
 	
 }

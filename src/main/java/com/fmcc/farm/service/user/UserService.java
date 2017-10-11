@@ -1,7 +1,9 @@
 package com.fmcc.farm.service.user;
 
+import java.util.Date;
 import java.util.List;
 
+import com.fmcc.farm.dto.StatsUserEarningDTO;
 import com.fmcc.farm.model.Animal;
 import com.fmcc.farm.model.User;
 
@@ -18,5 +20,7 @@ public interface UserService{
 	User findById(Integer id) throws NullPointerException;
 
 	void addNewAnimal(Animal a, Integer userId) throws NullPointerException;
+	
+	List<StatsUserEarningDTO> usersEarningsBetweenDates(Date fromDate, Date toDate, Integer page, Integer size);
 		
 }

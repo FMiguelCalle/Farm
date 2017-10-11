@@ -1,20 +1,25 @@
 package com.fmcc.farm.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class StatsUserEarningDTO implements Serializable{
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -134757272022696572L;
+	private static final long serialVersionUID = -2736269373264310002L;
 
-	protected Date firstDate;
+	private Integer id;
 	
-	protected Date lastDate;
+	private Long earning;
 
+	public StatsUserEarningDTO(Integer id, Long earning) {
+		this.id = id;
+		this.earning = earning;
+	}
 }

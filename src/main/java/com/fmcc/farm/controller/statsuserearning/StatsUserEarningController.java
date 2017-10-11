@@ -1,12 +1,12 @@
 package com.fmcc.farm.controller.statsuserearning;
 
+import java.util.Date;
 import java.util.List;
 
 import com.fmcc.farm.dto.StatsUserEarningDTO;
-import com.fmcc.farm.dto.StatsUserEarningDTOPost;
 
 public interface StatsUserEarningController {
 
-	List<StatsUserEarningDTOPost> usersEarningsBetweenDates(StatsUserEarningDTO dto, Integer page, Integer size);
+	List<StatsUserEarningDTO> usersEarningsBetweenDates(Date fromDate, Date toDate, Integer page, Integer size);
 	
 }

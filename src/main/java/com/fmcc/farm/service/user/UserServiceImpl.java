@@ -1,6 +1,7 @@
 package com.fmcc.farm.service.user;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.fmcc.farm.dao.UserDAO;
+import com.fmcc.farm.dto.StatsUserEarningDTO;
 import com.fmcc.farm.model.Animal;
 import com.fmcc.farm.model.User;
 import com.fmcc.farm.validators.dtoidpathid.PathIdAndDTOIdMatchValidator;
@@ -76,6 +78,11 @@ public class UserServiceImpl implements UserService{
 			u.setAnimals(animals);
 			update(u,userId);		
 		}
+	}
+
+	@Override
+	public List<StatsUserEarningDTO> usersEarningsBetweenDates(Date fromDate, Date toDate, Integer page, Integer size) {
+		return dao.usersEarningsBetweenDates(fromDate, toDate);
 	}
 
 }
