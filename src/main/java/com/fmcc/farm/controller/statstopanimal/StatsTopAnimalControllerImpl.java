@@ -1,6 +1,5 @@
-package com.fmcc.farm.controller;
+package com.fmcc.farm.controller.statstopanimal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,9 @@ public class StatsTopAnimalControllerImpl implements StatsTopAnimalController{
 	@RequestMapping(method=RequestMethod.GET)
 	public List<StatsTopAnimalDTO> topNAnimalsProfit(@PathVariable(name="n") Integer n,
 														@PathVariable(name="user_id") Integer userId, 
-														@RequestParam(name="page") Integer page,
-														@RequestParam(name="size") Integer size) {
-		List<StatsTopAnimalDTO> finalDTO = new ArrayList<>();
-		statsTopAnimalService.topNAnimalsProfit(n, userId, page, size);
-		return finalDTO;
+														@RequestParam(name="page",defaultValue="1") Integer page,
+														@RequestParam(name="size",defaultValue="5") Integer size) {
+		return statsTopAnimalService.topNAnimalsProfit(userId,n,page,size);
 	}
 
 }

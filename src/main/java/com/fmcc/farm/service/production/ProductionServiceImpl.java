@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.fmcc.farm.dao.ProductionDAO;
+import com.fmcc.farm.dto.StatsTopAnimalDTO;
 import com.fmcc.farm.model.Production;
 import com.fmcc.farm.service.chicken.ChickenService;
 import com.fmcc.farm.service.cow.CowService;
@@ -118,8 +119,18 @@ public class ProductionServiceImpl implements ProductionService{
 	}
 
 	@Override
-	public List<Production> findAllGroupByAnimalIdOrderByEarning(Integer page, Integer size) {
-		return dao.findAllGroupByAnimalIdOrderByEarning();
+	public List<StatsTopAnimalDTO> findAllGroupByAnimalIdOrderByEarning(Integer userId, Integer n, Integer page, Integer size) {
+		List<StatsTopAnimalDTO> dtos = new ArrayList<>();
+		if(pageAndSizeValidator.validatePageAndSize(page, n)) {
+			dao.topNAnimalsFromUser(userId, new PageRequest(page-1, n)).forEach(a -> {
+				dtos.add(a);
+			});
+		} else if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.topNAnimalsFromUser(userId, new PageRequest(page-1, size)).forEach(a -> {
+				dtos.add(a);
+			});
+		}
+		return dtos;
 	}
 	
 }

@@ -14,6 +14,11 @@ public class StatsTopAnimalDTO implements Serializable{
 	
 	private Integer id;
 	
-	private Integer profit;
+	private Long profit;
+	
+	public StatsTopAnimalDTO(Integer id, Long profit) {
+		this.id = id;
+		this.profit = profit;
+	}
 
 }

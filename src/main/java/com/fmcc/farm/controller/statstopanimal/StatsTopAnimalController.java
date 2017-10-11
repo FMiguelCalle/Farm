@@ -1,4 +1,4 @@
-package com.fmcc.farm.controller;
+package com.fmcc.farm.controller.statstopanimal;
 
 import java.util.List;
 

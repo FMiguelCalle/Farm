@@ -6,6 +6,6 @@ import com.fmcc.farm.dto.StatsTopAnimalDTO;
 
 public interface StatsTopAnimalService {
 	
-	List<StatsTopAnimalDTO> topNAnimalsProfit(Integer n, Integer userId, Integer page, Integer size);
+	List<StatsTopAnimalDTO> topNAnimalsProfit(Integer userId, Integer n, Integer page, Integer size);
 	
 }

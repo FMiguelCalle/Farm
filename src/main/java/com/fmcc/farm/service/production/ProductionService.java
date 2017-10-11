@@ -2,6 +2,7 @@ package com.fmcc.farm.service.production;
 
 import java.util.List;
 
+import com.fmcc.farm.dto.StatsTopAnimalDTO;
 import com.fmcc.farm.model.Production;
 
 public interface ProductionService {
@@ -18,7 +19,7 @@ public interface ProductionService {
 	
 	Production findById(Integer id) throws NullPointerException;
 	
-	List<Production> findAllGroupByAnimalIdOrderByEarning(Integer page, Integer size);
+	List<StatsTopAnimalDTO> findAllGroupByAnimalIdOrderByEarning(Integer userId, Integer n, Integer page, Integer size);
 
 	
 }

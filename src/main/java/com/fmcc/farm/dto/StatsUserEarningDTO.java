@@ -7,18 +7,14 @@ import lombok.Data;
 
 @Data
 public class StatsUserEarningDTO implements Serializable{
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1673673857667033587L;
+	private static final long serialVersionUID = -134757272022696572L;
+
+	protected Date firstDate;
 	
-	private Integer id;
-	
-	private Date firstDate;
-	
-	private Date lastDate;
-	
-	private Integer earning;
+	protected Date lastDate;
 
 }
