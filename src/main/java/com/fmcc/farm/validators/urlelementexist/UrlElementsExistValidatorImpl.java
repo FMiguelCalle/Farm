@@ -28,35 +28,28 @@ public class UrlElementsExistValidatorImpl implements UrlElementsExistValidator 
 	private NotNullValidator notNullValidator;
 	
 	@Override
-	public Boolean validateUrlElementsExistence(Integer userId, Integer animalId, String animalType) {
+	public Boolean validateUrlElementsExistence(Integer userId, Integer animalId, String animalType) throws NullPointerException{
 		if(notNullValidator.validateNotNull(userService.findById(userId))) {
 			if(animalType.equals("chicken")) {
 				if(notNullValidator.validateNotNull(chickenService.findByIdAndUserId(animalId, userId))) {
 					return new Boolean(true);
-				} else {
-					return new Boolean(false);
 				}
 			} else if (animalType.equals("cow")) {
 				if(notNullValidator.validateNotNull(cowService.findByIdAndUserId(animalId, userId))) {
 					return new Boolean(true);
-				} else {
-					return new Boolean(false);
 				}
-			} else {
-				return new Boolean(false);
 			}
-		} else {
-			return new Boolean(false);
 		}
+		throw new NullPointerException();
 	}
 
 	@Override
-	public Boolean validateUrlElementsExistence(Integer userId, Integer animalId, String animalType, Integer productionId) {
+	public Boolean validateUrlElementsExistence(Integer userId, Integer animalId, String animalType, Integer productionId) throws NullPointerException{
 		if(validateUrlElementsExistence(userId, animalId, animalType) &&
 				notNullValidator.validateNotNull(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(productionId, animalId, animalType, userId))) {
 			return new Boolean(true);
 		} else {
-			return new Boolean(false);
+			throw new NullPointerException();
 		}
 	}
 	

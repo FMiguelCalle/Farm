@@ -82,7 +82,13 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public List<StatsUserEarningDTO> usersEarningsBetweenDates(Date fromDate, Date toDate, Integer page, Integer size) {
-		return dao.usersEarningsBetweenDates(fromDate, toDate);
+		List<StatsUserEarningDTO> dtos = new ArrayList<>();
+		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+			dao.usersEarningsBetweenDates(fromDate, toDate, new PageRequest(page-1, size)).forEach(e -> {
+				dtos.add(e);
+			});
+		}
+		return dtos;
 	}
 
 }

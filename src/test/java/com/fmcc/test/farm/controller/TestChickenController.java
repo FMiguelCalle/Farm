@@ -59,7 +59,7 @@ public class TestChickenController {
 		
 		Mockito.when(chickenMapper.map(dto)).thenReturn(CHICKEN);
 		Mockito.when(chickenMapper.map(CHICKEN)).thenReturn(CHICKENDTO);
-		Mockito.when(chickenService.create(CHICKEN)).thenReturn(CHICKEN);
+		Mockito.when(chickenService.create(CHICKEN, USERID)).thenReturn(CHICKEN);
 		
 		final ChickenDTO c = chickenController.create(dto, USERID);
 		
@@ -78,7 +78,7 @@ public class TestChickenController {
 		
 		Mockito.when(chickenMapper.map(cDTO)).thenReturn(CHICKEN);
 		Mockito.when(chickenMapper.map(CHICKEN)).thenReturn(CHICKENDTO);
-		Mockito.when(chickenService.create(CHICKEN)).thenReturn(CHICKEN);
+		Mockito.when(chickenService.create(CHICKEN,USERID)).thenReturn(CHICKEN);
 		
 		final ChickenDTO dto = chickenController.create(cDTO, USERID);
 		
@@ -87,7 +87,7 @@ public class TestChickenController {
 	}
 	
 	@Test
-	public void testGetAllCondition1() throws Exception {
+	public void testGetAllOKEmptyList() throws Exception {
 		CHICKEN.setId(ID);
 		CHICKENDTO.setId(ID);
 		
@@ -99,114 +99,64 @@ public class TestChickenController {
 		
 		Assert.assertNotNull(chickensDTO);
 		Assert.assertEquals(chickensDTO.size(), chickens.size());
-		Assert.assertTrue(PAGE > 0 && (SIZE > 0 && SIZE <= 10));
 	}
 	
 	@Test
-	public void testGetAllCondition2() throws Exception {
-		final Integer page = 0;
+	public void testGetAllOKNotEmptyList() throws Exception {
+		CHICKEN.setId(ID);
+		CHICKEN.setUserId(USERID);
+		CHICKEN.setFrecuency("FRECUENCY");
+		CHICKEN.setType("TYPE");
+		CHICKEN.setProductions(new ArrayList<>());
+		CHICKENDTO.setId(ID);
+		CHICKENDTO.setFrecuency("FRECUENCY");
+		CHICKENDTO.setType("TYPE");
+		CHICKENDTO.setProductions(new ArrayList<>());
 		
-		final List<Chicken> chickens = new ArrayList<>();
+		final List<Chicken> chickens = new ArrayList<>();		
+		chickens.add(CHICKEN);
 		
-		Mockito.when(chickenService.getAll(USERID, page, SIZE)).thenReturn(chickens);
+		Mockito.when(chickenService.getAll(USERID, PAGE, SIZE)).thenReturn(chickens);
+		Mockito.when(chickenMapper.map(CHICKEN)).thenReturn(CHICKENDTO);
 		
-		final List<ChickenDTO> chickensDTO = chickenController.getAll(page, SIZE, USERID);
+		final List<ChickenDTO> chickensDTO = chickenController.getAll(PAGE, SIZE, USERID);
 		
 		Assert.assertNotNull(chickensDTO);
 		Assert.assertEquals(chickensDTO.size(), chickens.size());
-		Assert.assertEquals(chickensDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && (SIZE > 0 && SIZE <= 10));
+		Assert.assertEquals(chickensDTO.get(0).getId(), CHICKEN.getId());
+		Assert.assertEquals(chickensDTO.get(0).getFrecuency(), CHICKEN.getFrecuency());
+		Assert.assertEquals(chickensDTO.get(0).getType(), CHICKEN.getType());
+		Assert.assertEquals(chickensDTO.get(0).getProductions().size(), CHICKEN.getProductions().size());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testGetAllKONull() throws Exception {
+		
+		final List<Chicken> chickens = null;
+		
+		Mockito.when(chickenService.getAll(USERID, PAGE, SIZE)).thenReturn(chickens);
+		
+		final List<ChickenDTO> chickensDTO = chickenController.getAll(PAGE, SIZE, USERID);
+		
+		Assert.assertNull(chickensDTO);
 	}
 	
 	@Test
-	public void testGetAllCondition3() throws Exception {
-		
-		final Integer page = 0;
-		final Integer size = 0;
-		
-		final List<Chicken> chickens = new ArrayList<>();
-		
-		Mockito.when(chickenService.getAll(USERID, page, size)).thenReturn(chickens);
-		
-		final List<ChickenDTO> chickensDTO = chickenController.getAll(page, size, USERID);
-		
-		Assert.assertNotNull(chickensDTO);
-		Assert.assertEquals(chickensDTO.size(), chickens.size());
-		Assert.assertEquals(chickensDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && size <= 0 );
-	}
-	
-	@Test
-	public void testGetAllCondition4() throws Exception {
-		final Integer page = 0;
-		final Integer size = 20;
-		
-		final List<Chicken> chickens = new ArrayList<>();
-		
-		Mockito.when(chickenService.getAll(USERID, page, size)).thenReturn(chickens);
-		
-		final List<ChickenDTO> chickensDTO = chickenController.getAll(page, size, USERID);
-		
-		Assert.assertNotNull(chickensDTO);
-		Assert.assertEquals(chickensDTO.size(), chickens.size());
-		Assert.assertEquals(chickensDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && size > 10 );
-	}
-	
-	@Test
-	public void testGetAllCondition5() throws Exception {
-		
-		final Integer size = 0;
-		
-		final List<Chicken> chickens = new ArrayList<>();
-		
-		Mockito.when(chickenService.getAll(USERID, PAGE, size)).thenReturn(chickens);
-		
-		final List<ChickenDTO> chickensDTO = chickenController.getAll(PAGE, size, USERID);
-		
-		Assert.assertNotNull(chickensDTO);
-		Assert.assertEquals(chickensDTO.size(), chickens.size());
-		Assert.assertEquals(chickensDTO.size(), 0);
-		Assert.assertTrue(PAGE > 0 && size <= 0 );
-	}
-	
-	@Test
-	public void testGetAllCondition6() throws Exception {
-		
-		final Integer size = 20;
-		
-		final List<Chicken> chickens = new ArrayList<>();
-		
-		Mockito.when(chickenService.getAll(USERID, PAGE, size)).thenReturn(chickens);
-		
-		final List<ChickenDTO> chickensDTO = chickenController.getAll(PAGE, size, USERID);
-		
-		Assert.assertNotNull(chickensDTO);
-		Assert.assertEquals(chickensDTO.size(), chickens.size());
-		Assert.assertEquals(chickensDTO.size(), 0);
-		Assert.assertTrue(PAGE > 0 && size > 10 );
-	}
-	
-	@Test
-	public void testUpdateCondition1() throws Exception {
+	public void testUpdateOK() throws Exception {
 		
 		ChickenDTO dto = new ChickenDTO();
 		dto.setId(ID);
 		CHICKEN.setId(ID);
-		
-		final Integer id = ID;
+		CHICKEN.setUserId(USERID);
 		
 		Mockito.when(chickenMapper.map(dto)).thenReturn(CHICKEN);
 		
-		chickenController.update(dto, USERID, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertEquals(dto.getId(), id);
+		chickenController.update(dto, USERID, ID);
 		
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition2() throws Exception {
+	public void testUpdateKO() throws Exception {
 		
 		ChickenDTO dto = new ChickenDTO();
 		dto.setId(ID);
@@ -215,23 +165,9 @@ public class TestChickenController {
 		final Integer id = 23;
 		
 		Mockito.when(chickenMapper.map(dto)).thenReturn(CHICKEN);
-		
-		chickenController.update(dto, USERID, id);;
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition3() throws Exception {
-		
-		ChickenDTO dto = new ChickenDTO();
-		dto.setId(null);
-		
-		final Integer id = ID;
+		Mockito.doThrow(NullPointerException.class).when(chickenService).update(CHICKEN, id, USERID);
+			
 		chickenController.update(dto, USERID, id);
-		Assert.assertNull(dto.getId());
 		
 	}
 	
@@ -245,9 +181,9 @@ public class TestChickenController {
 		CHICKEN.setType("tipo");
 		
 		Mockito.when(chickenMapper.map(CHICKEN)).thenReturn(CHICKENDTO);
-		Mockito.when(chickenService.findById(ID)).thenReturn(CHICKEN);
+		Mockito.when(chickenService.findByIdAndUserId(ID, USERID)).thenReturn(CHICKEN);
 		
-		final ChickenDTO dto = chickenController.findById(ID);
+		final ChickenDTO dto = chickenController.findById(ID,USERID);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotNull(dto.getId());
@@ -266,9 +202,9 @@ public class TestChickenController {
 		cDTO.setId(23);
 		
 		Mockito.when(chickenMapper.map(c)).thenReturn(cDTO);
-		Mockito.when(chickenService.findById(ID)).thenReturn(c);
+		Mockito.when(chickenService.findByIdAndUserId(ID, USERID)).thenReturn(c);
 		
-		final ChickenDTO dto = chickenController.findById(ID);
+		final ChickenDTO dto = chickenController.findById(ID,USERID);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotNull(dto.getId());

@@ -79,111 +79,52 @@ public class TestUserController {
 	}
 	
 	@Test
-	public void testGetAllCondition1() throws Exception {
-		USER.setId(ID);
-		USER.setUsername(USERNAME);
-		USERDTO.setId(ID);
-		USERDTO.setUsername(USERNAME);
+	public void testGetAllOKEmptyList() throws Exception {
 		
 		final List<User> users = new ArrayList<>();
 		
 		Mockito.when(userService.getAll(PAGE, SIZE)).thenReturn(users);
 		
 		final List<UserDTO> usersDTO = userController.getAll(PAGE, SIZE);
-		
-		
+			
 		Assert.assertNotNull(usersDTO);
-		Assert.assertEquals(usersDTO.size(), users.size());
-		Assert.assertTrue(PAGE > 0 && (SIZE > 0 && SIZE <= 10));
 	}
 	
 	@Test
-	public void testGetAllCondition2() throws Exception {
-		final Integer page = 0;
+	public void testGetAllOKNotEmptyList() throws Exception {
+		USER.setId(ID);
+		USER.setUsername(USERNAME);
+		USERDTO.setId(ID);
+		USERDTO.setUsername(USERNAME);
 		
 		final List<User> users = new ArrayList<>();
+		users.add(USER);
 		
-		Mockito.when(userService.getAll(page, SIZE)).thenReturn(users);
+		Mockito.when(userMapper.map(USER)).thenReturn(USERDTO);
+		Mockito.when(userService.getAll(PAGE, SIZE)).thenReturn(users);
 		
-		final List<UserDTO> usersDTO = userController.getAll(page, SIZE);
-		
+		final List<UserDTO> usersDTO = userController.getAll(PAGE, SIZE);
+			
 		Assert.assertNotNull(usersDTO);
-		Assert.assertEquals(usersDTO.size(), users.size());
-		Assert.assertEquals(usersDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && (SIZE > 0 && SIZE <= 10));
+		Assert.assertNotNull(usersDTO.get(0));
+		Assert.assertNotNull(usersDTO.get(0).getId());
+		Assert.assertNotNull(usersDTO.get(0).getUsername());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testGetAllKONull() throws Exception {
+		
+		final List<User> users = null;
+		
+		Mockito.when(userService.getAll(PAGE, SIZE)).thenReturn(users);
+		
+		final List<UserDTO> usersDTO = userController.getAll(PAGE, SIZE);
+			
+		Assert.assertNull(usersDTO);
 	}
 	
 	@Test
-	public void testGetAllCondition3() throws Exception {
-		
-		final Integer page = 0;
-		final Integer size = 0;
-		
-		final List<User> users = new ArrayList<>();
-		
-		Mockito.when(userService.getAll(page, size)).thenReturn(users);
-		
-		final List<UserDTO> usersDTO = userController.getAll(page, size);
-		
-		Assert.assertNotNull(usersDTO);
-		Assert.assertEquals(usersDTO.size(), users.size());
-		Assert.assertEquals(usersDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && size <= 0 );
-	}
-	
-	@Test
-	public void testGetAllCondition4() throws Exception {
-		final Integer page = 0;
-		final Integer size = 20;
-		
-		final List<User> users = new ArrayList<>();
-		
-		Mockito.when(userService.getAll(page, size)).thenReturn(users);
-		
-		final List<UserDTO> usersDTO = userController.getAll(page, size);
-		
-		Assert.assertNotNull(usersDTO);
-		Assert.assertEquals(usersDTO.size(), users.size());
-		Assert.assertEquals(usersDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && size > 10 );
-	}
-	
-	@Test
-	public void testGetAllCondition5() throws Exception {
-		
-		final Integer size = 0;
-		
-		final List<User> users = new ArrayList<>();
-		
-		Mockito.when(userService.getAll(PAGE, size)).thenReturn(users);
-		
-		final List<UserDTO> usersDTO = userController.getAll(PAGE, size);
-		
-		Assert.assertNotNull(usersDTO);
-		Assert.assertEquals(usersDTO.size(), users.size());
-		Assert.assertEquals(usersDTO.size(), 0);
-		Assert.assertTrue(PAGE > 0 && size <= 0 );
-	}
-	
-	@Test
-	public void testGetAllCondition6() throws Exception {
-		
-		final Integer size = 20;
-		
-		final List<User> users = new ArrayList<>();
-		
-		Mockito.when(userService.getAll(PAGE, size)).thenReturn(users);
-		
-		final List<UserDTO> usersDTO = userController.getAll(PAGE, size);
-		
-		Assert.assertNotNull(usersDTO);
-		Assert.assertEquals(usersDTO.size(), users.size());
-		Assert.assertEquals(usersDTO.size(), 0);
-		Assert.assertTrue(PAGE > 0 && size > 10 );
-	}
-	
-	@Test
-	public void testUpdateCondition1() throws Exception {
+	public void testUpdateOK() throws Exception {
 		
 		UserDTO dto = new UserDTO();
 		dto.setId(ID);
@@ -203,7 +144,7 @@ public class TestUserController {
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition2() throws Exception {
+	public void testUpdateKO() throws Exception {
 		
 		UserDTO dto = new UserDTO();
 		dto.setId(ID);
@@ -213,31 +154,15 @@ public class TestUserController {
 		
 		final Integer id = 23;
 		
+		Mockito.doThrow(NullPointerException.class).when(userService).update(USER, id);
 		Mockito.when(userMapper.map(dto)).thenReturn(USER);
 		
 		userController.update(dto, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition3() throws Exception {
-		
-		UserDTO dto = new UserDTO();
-		dto.setId(null);
-		
-		final Integer id = ID;
-		
-		userController.update(dto, id);
-		
-		Assert.assertNull(dto.getId());
 		
 	}
 	
 	@Test
-	public void testDeleteCondition1() throws Exception {
+	public void testDeleteOK() throws Exception {
 		
 		UserDTO dto = new UserDTO();
 		dto.setId(ID);
@@ -251,13 +176,10 @@ public class TestUserController {
 		
 		userController.delete(dto, id);
 		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertEquals(dto.getId(), id);
-		
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testDeleteCondition2() throws Exception {
+	public void testDeleteKO() throws Exception {
 		
 		UserDTO dto = new UserDTO();
 		dto.setId(ID);
@@ -268,25 +190,9 @@ public class TestUserController {
 		final Integer id = 23;
 		
 		Mockito.when(userMapper.map(dto)).thenReturn(USER);
+		Mockito.doThrow(NullPointerException.class).when(userService).delete(USER, id);
 		
 		userController.delete(dto, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testDeleteCondition3() throws Exception {
-		
-		UserDTO dto = new UserDTO();
-		dto.setId(null);
-		
-		final Integer id = ID;
-		
-		userController.delete(dto, id);
-		
-		Assert.assertNull(dto.getId());
 		
 	}
 	

@@ -35,10 +35,10 @@ public class TestProductionController {
 	private static final Integer SELLINGPRICE = 30;
 	private static final Integer ANIMALID = 1;
 	private static final String ANIMALTYPECHICKEN = "chicken";
-	private static final String ANIMALTYPECOW = "cow";
 	private static final Integer ID = 1;
 	private static final Integer PAGE = 1;
 	private static final Integer SIZE = 5;
+	private static final Integer USERID = 1;
 	
 	@InjectMocks
 	private ProductionController productionController = new ProductionControllerImpl();
@@ -57,7 +57,7 @@ public class TestProductionController {
 
 	
 	@Test
-	public void testCreateOKChicken() throws Exception {
+	public void testCreateOK() throws Exception {
 		PRODUCTIONDTO.setId(ID);
 		PRODUCTIONDTO.setProductionDate(PRODUCTIONDATE);
 		PRODUCTIONDTO.setPurchasePrice(PURCHASEPRICE);
@@ -76,10 +76,10 @@ public class TestProductionController {
 
 		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
 		Mockito.when(productionMapper.map(PRODUCTION)).thenReturn(PRODUCTIONDTO);
-		Mockito.when(productionService.create(PRODUCTION)).thenReturn(PRODUCTION);
+		Mockito.when(productionService.create(PRODUCTION, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
 		
 		
-		final ProductionDTO c = productionController.create(dto, ANIMALID, animalType);
+		final ProductionDTO c = productionController.create(dto, ANIMALID, animalType, USERID);
 		
 		Assert.assertNotNull(c);
 		Assert.assertNotNull(c.getId());
@@ -91,7 +91,7 @@ public class TestProductionController {
 	}
 	
 	@Test
-	public void testCreateKOChicken() throws Exception {
+	public void testCreateKO() throws Exception {
 		
 		PRODUCTIONDTO.setId(23);
 		PRODUCTIONDTO.setProductionDate(new Date(1506336868069L));
@@ -110,9 +110,9 @@ public class TestProductionController {
 		
 		Mockito.when(productionMapper.map(cDTO)).thenReturn(PRODUCTION);
 		Mockito.when(productionMapper.map(PRODUCTION)).thenReturn(PRODUCTIONDTO);
-		Mockito.when(productionService.create(PRODUCTION)).thenReturn(PRODUCTION);
+		Mockito.when(productionService.create(PRODUCTION, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
 		
-		final ProductionDTO dto = productionController.create(cDTO, ANIMALID, animalType);
+		final ProductionDTO dto = productionController.create(cDTO, ANIMALID, animalType,USERID);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotEquals(dto.getId(), ID);
@@ -120,255 +120,100 @@ public class TestProductionController {
 	}
 	
 	@Test
-	public void testCreateOKCow() throws Exception {
+	public void testGetAllOKEmptyList() throws Exception {
+		
+		final List<Production> productions = new ArrayList<>();
+		
+		Mockito.when(productionService.getAll(ANIMALID, ANIMALTYPECHICKEN, USERID, PAGE, SIZE)).thenReturn(productions);
+		
+		final List<ProductionDTO> productionsDTO = productionController.getAll(ANIMALID, ANIMALTYPECHICKEN, USERID, PAGE, SIZE);
+		
+		Assert.assertNotNull(productionsDTO);
+	}
+	
+	@Test
+	public void testGetAllOKNotEmptyList() throws Exception {
+		PRODUCTION.setId(ID);
+		PRODUCTION.setAnimalId(ANIMALID);
+		PRODUCTION.setProductionDate(PRODUCTIONDATE);
+		PRODUCTION.setPurchasePrice(PURCHASEPRICE);
+		PRODUCTION.setSellingPrice(SELLINGPRICE);
 		PRODUCTIONDTO.setId(ID);
 		PRODUCTIONDTO.setProductionDate(PRODUCTIONDATE);
 		PRODUCTIONDTO.setPurchasePrice(PURCHASEPRICE);
 		PRODUCTIONDTO.setSellingPrice(SELLINGPRICE);
-		PRODUCTION.setId(ID);
-		PRODUCTION.setProductionDate(PRODUCTIONDATE);
-		PRODUCTION.setPurchasePrice(PURCHASEPRICE);
-		PRODUCTION.setSellingPrice(SELLINGPRICE);
+		
+		final List<Production> productions = new ArrayList<>();
+		productions.add(PRODUCTION);
+		
+		Mockito.when(productionMapper.map(PRODUCTION)).thenReturn(PRODUCTIONDTO);
+		Mockito.when(productionService.getAll(ANIMALID,ANIMALTYPECHICKEN,USERID, PAGE, SIZE)).thenReturn(productions);
+		
+		final List<ProductionDTO> productionsDTO = productionController.getAll(ANIMALID, ANIMALTYPECHICKEN, USERID, PAGE, SIZE);
+		
+		Assert.assertNotNull(productionsDTO);
+		Assert.assertNotNull(productionsDTO.get(0));
+		Assert.assertNotNull(productionsDTO.get(0).getId());
+		Assert.assertNotNull(productionsDTO.get(0).getProductionDate());
+		Assert.assertNotNull(productionsDTO.get(0).getPurchasePrice());
+		Assert.assertNotNull(productionsDTO.get(0).getSellingPrice());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testGetAllKONull() throws Exception {
+		
+		final List<Production> productions = null;
+		
+		Mockito.when(productionService.getAll(ANIMALID, ANIMALTYPECHICKEN, USERID, PAGE, SIZE)).thenReturn(productions);
+		
+		final List<ProductionDTO> productionsDTO = productionController.getAll(ANIMALID, ANIMALTYPECHICKEN, USERID, PAGE, SIZE);
+		
+		Assert.assertNull(productionsDTO);
+	}
+	
+	
+	@Test
+	public void testUpdateConditionOK() throws Exception {
 		
 		ProductionDTO dto = new ProductionDTO();
+		dto.setId(ID);
 		dto.setProductionDate(PRODUCTIONDATE);
 		dto.setPurchasePrice(PURCHASEPRICE);
 		dto.setSellingPrice(SELLINGPRICE);
-		
-		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
-		Mockito.when(productionMapper.map(PRODUCTION)).thenReturn(PRODUCTIONDTO);
-		Mockito.when(productionService.create(PRODUCTION)).thenReturn(PRODUCTION);
-		
-		final ProductionDTO c = productionController.create(dto, ANIMALID, ANIMALTYPECOW);
-		
-		Assert.assertNotNull(c);
-		Assert.assertNotNull(c.getId());
-		Assert.assertEquals(c.getId(), PRODUCTIONDTO.getId());
-		Assert.assertEquals(c.getProductionDate(), PRODUCTIONDTO.getProductionDate());
-		Assert.assertEquals(c.getPurchasePrice(), PRODUCTIONDTO.getPurchasePrice());
-		Assert.assertEquals(c.getSellingPrice(), PRODUCTIONDTO.getSellingPrice());
-		Assert.assertTrue(ANIMALTYPECOW=="cow");
-	}
-	
-	@Test
-	public void testCreateKOCow() throws Exception {
-		
-		PRODUCTIONDTO.setId(23);
-		PRODUCTION.setId(ID);
-		ProductionDTO cDTO = new ProductionDTO();
-		
-		Mockito.when(productionMapper.map(cDTO)).thenReturn(PRODUCTION);
-		Mockito.when(productionMapper.map(PRODUCTION)).thenReturn(PRODUCTIONDTO);
-		Mockito.when(productionService.create(PRODUCTION)).thenReturn(PRODUCTION);
-		
-		final ProductionDTO dto = productionController.create(cDTO, ANIMALID, ANIMALTYPECOW);
-		
-		Assert.assertNotNull(dto);
-		Assert.assertNotEquals(dto.getId(), ID);
-		Assert.assertTrue(ANIMALTYPECOW=="cow");
-	}
-	
-	@Test
-	public void testGetAllCondition1() throws Exception {
-		PRODUCTIONDTO.setId(ID);
-		PRODUCTIONDTO.setProductionDate(PRODUCTIONDATE);
-		PRODUCTIONDTO.setPurchasePrice(PURCHASEPRICE);
-		PRODUCTIONDTO.setSellingPrice(SELLINGPRICE);
 		PRODUCTION.setId(ID);
 		PRODUCTION.setProductionDate(PRODUCTIONDATE);
 		PRODUCTION.setPurchasePrice(PURCHASEPRICE);
 		PRODUCTION.setSellingPrice(SELLINGPRICE);
-		
-		final List<Production> productions = new ArrayList<>();
-		
-		Mockito.when(productionService.getAll(ANIMALID, PAGE, SIZE)).thenReturn(productions);
-		
-		final List<ProductionDTO> productionsDTO = productionController.getAll(PAGE, SIZE, ANIMALID);
-		
-		Assert.assertNotNull(productionsDTO);
-		Assert.assertEquals(productionsDTO.size(), productions.size());
-		Assert.assertTrue(PAGE > 0 && (SIZE > 0 && SIZE <= 10));
-	}
-	
-	@Test
-	public void testGetAllCondition2() throws Exception {
-		
-		final Integer page = 0;
-		
-		final List<Production> productions = new ArrayList<>();
-		
-		Mockito.when(productionService.getAll(ANIMALID, page, SIZE)).thenReturn(productions);
-		
-		final List<ProductionDTO> productionsDTO = productionController.getAll(page, SIZE, ANIMALID);
-		
-		Assert.assertNotNull(productionsDTO);
-		Assert.assertEquals(productionsDTO.size(), productions.size());
-		Assert.assertEquals(productionsDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && (SIZE > 0 && SIZE <= 10));
-	}
-	
-	@Test
-	public void testGetAllCondition3() throws Exception {
-		
-		final Integer page = 0;
-		final Integer size = 0;
-		
-		final List<Production> productions = new ArrayList<>();
-		
-		Mockito.when(productionService.getAll(ANIMALID, page, size)).thenReturn(productions);
-		
-		final List<ProductionDTO> productionsDTO = productionController.getAll(page, size, ANIMALID);
-		
-		Assert.assertNotNull(productionsDTO);
-		Assert.assertEquals(productionsDTO.size(), productions.size());
-		Assert.assertEquals(productionsDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && size <= 0 );
-	}
-	
-	@Test
-	public void testGetAllCondition4() throws Exception {
-		final Integer page = 0;
-		final Integer size = 20;
-		
-		final List<Production> productions = new ArrayList<>();
-		
-		Mockito.when(productionService.getAll(ANIMALID, page, size)).thenReturn(productions);
-		
-		final List<ProductionDTO> productionsDTO = productionController.getAll(page, size, ANIMALID);
-		
-		Assert.assertNotNull(productionsDTO);
-		Assert.assertEquals(productionsDTO.size(), productions.size());
-		Assert.assertEquals(productionsDTO.size(), 0);
-		Assert.assertTrue(page <= 0 && size > 10 );
-	}
-	
-	@Test
-	public void testGetAllCondition5() throws Exception {
-		
-		final Integer size = 0;
-		
-		final List<Production> productions = new ArrayList<>();
-		
-		Mockito.when(productionService.getAll(ANIMALID, PAGE, size)).thenReturn(productions);
-		
-		final List<ProductionDTO> productionsDTO = productionController.getAll(PAGE, size, ANIMALID);
-		
-		Assert.assertNotNull(productionsDTO);
-		Assert.assertEquals(productionsDTO.size(), productions.size());
-		Assert.assertEquals(productionsDTO.size(), 0);
-		Assert.assertTrue(PAGE > 0 && size <= 0 );
-	}
-	
-	@Test
-	public void testGetAllCondition6() throws Exception {
-		
-		final Integer size = 20;
-		
-		final List<Production> productions = new ArrayList<>();
-		
-		Mockito.when(productionService.getAll(ANIMALID, PAGE, size)).thenReturn(productions);
-		
-		final List<ProductionDTO> productionsDTO = productionController.getAll(PAGE, size, ANIMALID);
-		
-		Assert.assertNotNull(productionsDTO);
-		Assert.assertEquals(productionsDTO.size(), productions.size());
-		Assert.assertEquals(productionsDTO.size(), 0);
-		Assert.assertTrue(PAGE > 0 && size > 10 );
-	}
-	
-	@Test
-	public void testUpdateCondition1Chicken() throws Exception {
-		
-		ProductionDTO dto = new ProductionDTO();
-		dto.setId(ID);
-		PRODUCTION.setId(ID);
+		PRODUCTION.setAnimalId(ANIMALID);
 		
 		final Integer id = ID;
 		
 		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
 		
-		productionController.update(dto, ANIMALID, ANIMALTYPECHICKEN, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertEquals(dto.getId(), id);
+		productionController.update(dto, ANIMALID, ANIMALTYPECHICKEN, id, USERID);
 		
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition2Chicken() throws Exception {
+	public void testUpdateKO() throws Exception {
 		
 		ProductionDTO dto = new ProductionDTO();
 		dto.setId(ID);
+		dto.setProductionDate(PRODUCTIONDATE);
+		dto.setPurchasePrice(PURCHASEPRICE);
+		dto.setSellingPrice(SELLINGPRICE);
 		PRODUCTION.setId(ID);
+		PRODUCTION.setProductionDate(PRODUCTIONDATE);
+		PRODUCTION.setPurchasePrice(PURCHASEPRICE);
+		PRODUCTION.setSellingPrice(SELLINGPRICE);
+		PRODUCTION.setAnimalId(ANIMALID);
 		
 		final Integer id = 23;
 		
+		Mockito.doThrow(NullPointerException.class).when(productionService).update(PRODUCTION, id, ANIMALID, ANIMALTYPECHICKEN, USERID);
 		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
 		
-		productionController.update(dto, ANIMALID, ANIMALTYPECHICKEN, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition3Chicken() throws Exception {
-		
-		ProductionDTO dto = new ProductionDTO();
-		dto.setId(null);
-		
-		final Integer id = ID;
-		productionController.update(dto, ANIMALID, ANIMALTYPECHICKEN, id);
-		Assert.assertNull(dto.getId());
-		
-	}
-	
-	@Test
-	public void testUpdateCondition1Cow() throws Exception {
-		
-		ProductionDTO dto = new ProductionDTO();
-		dto.setId(ID);
-		PRODUCTION.setId(ID);
-		
-		final Integer id = ID;
-		
-		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
-		
-		productionController.update(dto, ANIMALID, ANIMALTYPECOW, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition2Cow() throws Exception {
-		
-		ProductionDTO dto = new ProductionDTO();
-		dto.setId(ID);
-		PRODUCTION.setId(ID);
-		
-		final Integer id = 23;
-		
-		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
-		
-		productionController.update(dto, ANIMALID, ANIMALTYPECOW, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testUpdateCondition3Cow() throws Exception {
-		
-		ProductionDTO dto = new ProductionDTO();
-		dto.setId(null);
-		
-		final Integer id = ID;
-		productionController.update(dto, ANIMALID, ANIMALTYPECOW, id);
-		Assert.assertNull(dto.getId());
+		productionController.update(dto, ANIMALID, ANIMALTYPECHICKEN, id, USERID);
 		
 	}
 	
@@ -384,14 +229,16 @@ public class TestProductionController {
 		PRODUCTION.setSellingPrice(SELLINGPRICE);
 		
 		Mockito.when(productionMapper.map(PRODUCTION)).thenReturn(PRODUCTIONDTO);
-		Mockito.when(productionService.findById(ID)).thenReturn(PRODUCTION);
+		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(ID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
 		
-		final ProductionDTO dto = productionController.findById(ID);
+		final ProductionDTO dto = productionController.findById(ID, ANIMALID, ANIMALTYPECHICKEN, USERID);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotNull(dto.getId());
 		Assert.assertEquals(dto.getId(), ID);
-		
+		Assert.assertNotNull(dto.getProductionDate());
+		Assert.assertNotNull(dto.getPurchasePrice());
+		Assert.assertNotNull(dto.getSellingPrice());
 	}
 	
 	@Test
@@ -405,9 +252,9 @@ public class TestProductionController {
 		cDTO.setId(23);
 		
 		Mockito.when(productionMapper.map(c)).thenReturn(cDTO);
-		Mockito.when(productionService.findById(ID)).thenReturn(c);
+		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(ID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(c);
 		
-		final ProductionDTO dto = productionController.findById(ID);
+		final ProductionDTO dto = productionController.findById(ID, ANIMALID, ANIMALTYPECHICKEN, USERID);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotNull(dto.getId());
@@ -416,7 +263,7 @@ public class TestProductionController {
 	}
 	
 	@Test
-	public void testDeleteCondition1() throws Exception {
+	public void testDeleteOK() throws Exception {
 		
 		ProductionDTO dto = new ProductionDTO();
 		dto.setId(ID);
@@ -424,6 +271,7 @@ public class TestProductionController {
 		dto.setPurchasePrice(PURCHASEPRICE);
 		dto.setSellingPrice(SELLINGPRICE);
 		PRODUCTION.setId(ID);
+		PRODUCTION.setAnimalId(ANIMALID);
 		PRODUCTION.setProductionDate(PRODUCTIONDATE);
 		PRODUCTION.setPurchasePrice(PURCHASEPRICE);
 		PRODUCTION.setSellingPrice(SELLINGPRICE);
@@ -432,10 +280,7 @@ public class TestProductionController {
 		
 		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
 		
-		productionController.delete(dto, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertEquals(dto.getId(), id);
+		productionController.delete(dto, id, ANIMALID, ANIMALTYPECHICKEN, USERID);
 		
 	}
 	
@@ -448,32 +293,17 @@ public class TestProductionController {
 		dto.setPurchasePrice(PURCHASEPRICE);
 		dto.setSellingPrice(SELLINGPRICE);
 		PRODUCTION.setId(ID);
+		PRODUCTION.setAnimalId(ANIMALID);
 		PRODUCTION.setProductionDate(PRODUCTIONDATE);
 		PRODUCTION.setPurchasePrice(PURCHASEPRICE);
 		PRODUCTION.setSellingPrice(SELLINGPRICE);
 		
 		final Integer id = 23;
-		
+
+		Mockito.doThrow(NullPointerException.class).when(productionService).delete(PRODUCTION, id, ANIMALID, ANIMALTYPECHICKEN, USERID);
 		Mockito.when(productionMapper.map(dto)).thenReturn(PRODUCTION);
 		
-		productionController.delete(dto, id);
-		
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotEquals(dto.getId(), id);
-		
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testDeleteCondition3() throws Exception {
-		
-		ProductionDTO dto = new ProductionDTO();
-		dto.setId(null);
-		
-		final Integer id = ID;
-		
-		productionController.delete(dto, id);
-		
-		Assert.assertNull(dto.getId());
+		productionController.delete(dto, id, ANIMALID, ANIMALTYPECHICKEN, USERID);
 		
 	}
 	
