@@ -121,16 +121,20 @@ public class ProductionServiceImpl implements ProductionService{
 	@Override
 	public List<StatsTopAnimalDTO> findAllGroupByAnimalIdOrderByEarning(Integer userId, Integer n, Integer page, Integer size) {
 		List<StatsTopAnimalDTO> dtos = new ArrayList<>();
-		if(pageAndSizeValidator.validatePageAndSize(page, n)) {
-			dao.topNAnimalsFromUser(userId, new PageRequest(page-1, n)).forEach(a -> {
-				dtos.add(a);
-			});
-		} else if(pageAndSizeValidator.validatePageAndSize(page, size)) {
-			dao.topNAnimalsFromUser(userId, new PageRequest(page-1, size)).forEach(a -> {
-				dtos.add(a);
-			});
+		if(urlElementsExistValidator.validateUrlElementsExistence(userId)) {
+			if(pageAndSizeValidator.validatePageAndSize(page, n)) {
+				dao.topNAnimalsFromUser(userId, new PageRequest(page-1, n)).forEach(a -> {
+					dtos.add(a);
+				});
+			} else if(pageAndSizeValidator.validatePageAndSize(page, size)) {
+				dao.topNAnimalsFromUser(userId, new PageRequest(page-1, size)).forEach(a -> {
+					dtos.add(a);
+				});
+			}
+			return dtos;
+		} else {
+			return null;
 		}
-		return dtos;
 	}
 	
 }

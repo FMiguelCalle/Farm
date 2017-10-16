@@ -65,7 +65,7 @@ public class TestUrlElementsExistValidator {
 	 * 		- chicken is not null. 		
 	 */
 	@Test
-	public void TestValidateUrlElementsExistenceCondition1() throws Exception {
+	public void testValidateUrlElementsExistenceCondition1() throws Exception {
 		USER.setId(USERID);
 		USER.setAnimals(new ArrayList<>());
 		USER.setUsername("ADMIN");
@@ -86,7 +86,7 @@ public class TestUrlElementsExistValidator {
 	 * 		- user is null.	
 	 */
 	@Test(expected=NullPointerException.class)
-	public void TestValidateUrlElementsExistenceCondition2() throws Exception{
+	public void testValidateUrlElementsExistenceCondition2() throws Exception{
 		User user = null;
 		
 		Mockito.when(userService.findById(USERID)).thenReturn(user);
@@ -103,8 +103,8 @@ public class TestUrlElementsExistValidator {
 	 * 		- animal type is chicken.
 	 * 		- chicken is null. 		
 	 */
-	@Test
-	public void TestValidateUrlElementsExistenceCondition3() throws Exception {
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition3() throws Exception {
 		USER.setId(USERID);
 		USER.setAnimals(new ArrayList<>());
 		USER.setUsername("ADMIN");
@@ -120,4 +120,90 @@ public class TestUrlElementsExistValidator {
 		
 		Assert.assertNull(res);
 	}
+	
+	/*
+	 * Condition 4:
+	 * 		- user is not null.
+	 * 		- animal type is cow.
+	 * 		- cow is not null.
+	 */
+	@Test
+	public void testValidateUrlElementsExistenceCondition4() throws Exception {
+		USER.setId(USERID);
+		USER.setAnimals(new ArrayList<>());
+		USER.setUsername("ADMIN");
+		
+		Mockito.when(userService.findById(USERID)).thenReturn(USER);
+		Mockito.when(notNullValidator.validateNotNull(USER)).thenReturn(true);
+		Mockito.when(cowService.findByIdAndUserId(USERID, ANIMALID)).thenReturn(COW);
+		Mockito.when(notNullValidator.validateNotNull(COW)).thenReturn(true);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECOW);
+		
+		Assert.assertNotNull(res);
+		Assert.assertTrue(res);
+	}
+	
+	/*
+	 * Condition 5:
+	 * 		- user is not null.
+	 * 		- animal type is cow.
+	 * 		- cow is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition5() throws Exception {
+		USER.setId(USERID);
+		USER.setAnimals(new ArrayList<>());
+		USER.setUsername("ADMIN");
+		
+		Cow cow = null;
+		
+		Mockito.when(userService.findById(USERID)).thenReturn(USER);
+		Mockito.when(notNullValidator.validateNotNull(USER)).thenReturn(true);
+		Mockito.when(cowService.findByIdAndUserId(USERID, ANIMALID)).thenReturn(cow);
+		Mockito.when(notNullValidator.validateNotNull(cow)).thenThrow(new NullPointerException());
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN);
+		
+		Assert.assertNull(res);
+	}
+	
+	/*
+	 * Condition 6:
+	 * 		- user is not null.
+	 * 		- animal type is not cow or chicken.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition6() throws Exception {
+		USER.setId(USERID);
+		USER.setAnimals(new ArrayList<>());
+		USER.setUsername("ADMIN");
+		
+		Mockito.when(userService.findById(USERID)).thenReturn(USER);
+		Mockito.when(notNullValidator.validateNotNull(USER)).thenReturn(true);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, "Platypus");
+		
+		Assert.assertNull(res);
+	}
+	
+	/*
+	 * Condition 7:
+	 * 		- validate userId, animalId and animalType ok.
+	 * 		- production is not null.
+	 */
+	/*@Test
+	public void testValidateUrlElementsExistenceCondition7() throws Exception {
+		PRODUCTION.setId(PRODUCTIONID);
+		PRODUCTION.setAnimalId(ANIMALID);
+				
+		Mockito.doReturn(true).when(validator).validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN);
+		Mockito.when(notNullValidator.validateNotNull(PRODUCTION));
+		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(PRODUCTIONID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN, PRODUCTIONID);
+		
+		Assert.assertNotNull(res);
+		Assert.assertTrue(res);
+	}*/
 }

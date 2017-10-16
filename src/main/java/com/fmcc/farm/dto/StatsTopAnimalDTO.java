@@ -3,8 +3,10 @@ package com.fmcc.farm.dto;
 import java.io.Serializable;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class StatsTopAnimalDTO implements Serializable{
 
 	/**

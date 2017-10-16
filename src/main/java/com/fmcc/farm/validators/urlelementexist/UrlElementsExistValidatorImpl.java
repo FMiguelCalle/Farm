@@ -52,5 +52,14 @@ public class UrlElementsExistValidatorImpl implements UrlElementsExistValidator 
 			throw new NullPointerException();
 		}
 	}
+
+	@Override
+	public Boolean validateUrlElementsExistence(Integer userId) {
+		if(notNullValidator.validateNotNull(userService.findById(userId))) {
+			return new Boolean(true);
+		} else {
+			throw new NullPointerException();
+		}
+	}
 	
 }
