@@ -46,7 +46,7 @@ repositories {
 }
 
 
-dependencies {
+dependencies {	
 	// https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
 	compile group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.7.9'
 	// https://mvnrepository.com/artifact/net.sf.dozer/dozer

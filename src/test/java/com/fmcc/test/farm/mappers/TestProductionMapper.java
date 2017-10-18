@@ -1,6 +1,8 @@
 package com.fmcc.test.farm.mappers;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.dozer.DozerBeanMapper;
 import org.junit.Assert;
@@ -15,6 +17,8 @@ import com.fmcc.farm.dto.ProductionDTO;
 import com.fmcc.farm.mappers.production.ProductionMapper;
 import com.fmcc.farm.mappers.production.ProductionMapperImpl;
 import com.fmcc.farm.model.Production;
+import com.fmcc.farm.service.production.ProductionService;
+import com.fmcc.farm.service.production.ProductionServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestProductionMapper {
@@ -28,10 +32,13 @@ public class TestProductionMapper {
 	private static final Integer ID = 1;
 	
 	@InjectMocks
-	private ProductionMapper ProductionMapper = new ProductionMapperImpl();
+	private ProductionMapper productionMapper = new ProductionMapperImpl();
 	
 	@Mock
 	private DozerBeanMapper mapper = new DozerBeanMapper();
+	
+	@Mock
+	private ProductionService productionService = new ProductionServiceImpl();
 	
 	@Test
 	public void testProductionToDTOMapOK() {
@@ -48,7 +55,7 @@ public class TestProductionMapper {
 		
 		Mockito.when(mapper.map(PRODUCTION, ProductionDTO.class)).thenReturn(PRODUCTIONDTO);
 		
-		final ProductionDTO dto = ProductionMapper.map(PRODUCTION);
+		final ProductionDTO dto = productionMapper.map(PRODUCTION);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotNull(dto.getId());
@@ -73,7 +80,7 @@ public class TestProductionMapper {
 		
 		Mockito.when(mapper.map(PRODUCTION, ProductionDTO.class)).thenReturn(uDTO);
 		
-		final ProductionDTO dto = ProductionMapper.map(PRODUCTION);
+		final ProductionDTO dto = productionMapper.map(PRODUCTION);
 		
 		Assert.assertNotNull(dto);
 		Assert.assertNotNull(dto.getId());
@@ -94,7 +101,7 @@ public class TestProductionMapper {
 		
 		Mockito.when(mapper.map(PRODUCTIONDTO, Production.class)).thenReturn(PRODUCTION);
 		
-		final Production production = ProductionMapper.map(PRODUCTIONDTO);
+		final Production production = productionMapper.map(PRODUCTIONDTO);
 		
 		Assert.assertNotNull(production);
 		Assert.assertNotNull(production.getId());
@@ -119,11 +126,81 @@ public class TestProductionMapper {
 		
 		Mockito.when(mapper.map(PRODUCTIONDTO, Production.class)).thenReturn(c);
 		
-		final Production production = ProductionMapper.map(PRODUCTIONDTO);
+		final Production production = productionMapper.map(PRODUCTIONDTO);
 		
 		Assert.assertNotNull(production);
 		Assert.assertNotNull(production.getId());
 		Assert.assertNotEquals(production.getId(), PRODUCTIONDTO.getId());
 	}
 	
+	@Test
+	public void testCreateListIdFromProductionOKEmptyList() {
+		List<Production> productions = new ArrayList<>();
+		
+		List<Integer> ids = productionMapper.createListIdFromProduction(productions);
+		
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(ids.size(), productions.size());
+	}
+	
+	@Test
+	public void testCreateListIdFromProductionOKNotEmptyList() {
+		List<Production> productions = new ArrayList<>();
+		PRODUCTION.setId(ID);
+		PRODUCTION.setAnimalId(ANIMALID);
+		productions.add(PRODUCTION);
+		
+		List<Integer> ids = productionMapper.createListIdFromProduction(productions);
+		
+		Assert.assertNotNull(ids);
+		Assert.assertEquals(ids.size(), productions.size());
+		Assert.assertNotNull(ids.get(0));
+		Assert.assertEquals(ids.get(0), PRODUCTION.getId());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testCreateListIdFromProductionKO() {
+		List<Production> productions = null;
+		
+		List<Integer> ids = productionMapper.createListIdFromProduction(productions);
+		
+		Assert.assertNull(ids);
+	}
+	
+	@Test
+	public void testCreateListProductionFromIdOKEmptyList() {
+		List<Integer> ids = new ArrayList<>();
+		
+		List<Production> productions = productionMapper.createListProductionFromId(ids);
+		
+		Assert.assertNotNull(productions);
+		Assert.assertEquals(productions.size(), ids.size());
+	}
+	
+	@Test
+	public void testCreateListProductionFromIdOKNotEmptyList() {
+		PRODUCTION.setId(ID);
+		PRODUCTION.setAnimalId(ANIMALID);
+		
+		List<Integer> ids = new ArrayList<>();
+		ids.add(ID);
+		
+		Mockito.when(productionService.findById(ID)).thenReturn(PRODUCTION);
+		
+		List<Production> productions = productionMapper.createListProductionFromId(ids);
+		
+		Assert.assertNotNull(productions);
+		Assert.assertEquals(productions.size(), ids.size());
+		Assert.assertNotNull(productions.get(0));
+		Assert.assertEquals(productions.get(0).getId(), ID);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testCreateListProductionFromIdKO() {
+		List<Integer> ids = null;
+		
+		List<Production> productions = productionMapper.createListProductionFromId(ids);
+		
+		Assert.assertNull(productions);
+	}
 }

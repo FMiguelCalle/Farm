@@ -15,8 +15,8 @@ import com.fmcc.farm.model.User;
 @Repository
 public interface UserDAO extends PagingAndSortingRepository<User, Integer> {
 	
-	@Query(value="SELECT new com.fmcc.farm.dto.StatsUserEarningDTO(a.userId, sum(p.sellingPrice-p.purchasePrice) AS earning) FROM Animal AS a, Production AS p WHERE a.id = p.animalId AND p.productionDate BETWEEN :firstDate AND :lastDate GROUP BY a.userId")
-	public Page<StatsUserEarningDTO> usersEarningsBetweenDates(@Param(value="firstDate") Date firstDate,
-																	@Param(value="lastDate") Date lastDate,
+	@Query(value="SELECT new com.fmcc.farm.dto.StatsUserEarningDTO(a.userId, sum(p.sellingPrice-p.purchasePrice) AS earning) FROM Animal AS a, Production AS p WHERE a.id = p.animalId AND p.productionDate BETWEEN :fromDate AND :toDate GROUP BY a.userId")
+	public Page<StatsUserEarningDTO> usersEarningsBetweenDates(@Param(value="fromDate") Date fromDate,
+																	@Param(value="toDate") Date toDate,
 																	Pageable p);
 }

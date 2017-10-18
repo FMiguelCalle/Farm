@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> getAll(Integer page, Integer size) {
+	public List<User> getAll(Integer page, Integer size) throws NullPointerException{
 		final List<User> users = new ArrayList<>();
 		if(pageAndSizeValidator.validatePageAndSize(page, size)) {
 			dao.findAll(new PageRequest(page-1, size)).forEach(c -> {	

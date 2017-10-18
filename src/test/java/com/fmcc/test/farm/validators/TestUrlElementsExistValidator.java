@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fmcc.farm.model.Chicken;
@@ -40,9 +41,10 @@ public class TestUrlElementsExistValidator {
 	private static final Cow COW = new Cow();
 	private static final Production PRODUCTION = new Production();
 	
+	@Spy
 	@InjectMocks
 	private UrlElementsExistValidator validator = new UrlElementsExistValidatorImpl();
-
+	
 	@Mock
 	private UserService userService = new UserServiceImpl();
 	
@@ -192,18 +194,109 @@ public class TestUrlElementsExistValidator {
 	 * 		- validate userId, animalId and animalType ok.
 	 * 		- production is not null.
 	 */
-	/*@Test
+	@Test
 	public void testValidateUrlElementsExistenceCondition7() throws Exception {
 		PRODUCTION.setId(PRODUCTIONID);
 		PRODUCTION.setAnimalId(ANIMALID);
-				
+			
 		Mockito.doReturn(true).when(validator).validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN);
-		Mockito.when(notNullValidator.validateNotNull(PRODUCTION));
+		Mockito.when(notNullValidator.validateNotNull(PRODUCTION)).thenReturn(true);
 		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(PRODUCTIONID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
 		
 		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN, PRODUCTIONID);
 		
 		Assert.assertNotNull(res);
 		Assert.assertTrue(res);
-	}*/
+	}
+	
+	/*
+	 * Condition 8:
+	 * 		- validate userId, animalId and animalType ok.
+	 * 		- production is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition8() throws Exception {
+		PRODUCTION.setId(PRODUCTIONID);
+		PRODUCTION.setAnimalId(ANIMALID);
+			
+		Mockito.doReturn(true).when(validator).validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN);
+		Mockito.when(notNullValidator.validateNotNull(PRODUCTION)).thenThrow(new NullPointerException());
+		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(PRODUCTIONID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN, PRODUCTIONID);
+		
+		Assert.assertNull(res);
+	}
+	
+	/*
+	 * Condition 9:
+	 * 		- validate userId, animalId and animalType not ok.
+	 * 		- production is not null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition9() throws Exception {
+		PRODUCTION.setId(PRODUCTIONID);
+		PRODUCTION.setAnimalId(ANIMALID);
+			
+		Mockito.doThrow(new NullPointerException()).when(validator).validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN);
+		Mockito.when(notNullValidator.validateNotNull(PRODUCTION)).thenReturn(true);
+		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(PRODUCTIONID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN, PRODUCTIONID);
+		
+		Assert.assertNull(res);
+	}
+	
+	/*
+	 * Condition 10:
+	 * 		- validate userId, animalId and animalType not ok.
+	 * 		- production is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition10() throws Exception {
+		PRODUCTION.setId(PRODUCTIONID);
+		PRODUCTION.setAnimalId(ANIMALID);
+			
+		Mockito.doThrow(new NullPointerException()).when(validator).validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN);
+		Mockito.when(notNullValidator.validateNotNull(PRODUCTION)).thenThrow(new NullPointerException());
+		Mockito.when(productionService.findByIdAndAnimalIdAndAnimalTypeAndUserId(PRODUCTIONID, ANIMALID, ANIMALTYPECHICKEN, USERID)).thenReturn(PRODUCTION);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID, ANIMALID, ANIMALTYPECHICKEN, PRODUCTIONID);
+		
+		Assert.assertNull(res);
+	}
+	
+	/*
+	 * Condition 11:
+	 * 		- user is not null.
+	 */
+	@Test
+	public void testValidateUrlElementsExistenceCondition11() throws Exception {
+		USER.setId(USERID);
+		USER.setUsername("ADMIN");
+		
+		Mockito.when(userService.findById(USERID)).thenReturn(USER);
+		Mockito.when(notNullValidator.validateNotNull(USER)).thenReturn(true);
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID);
+		
+		Assert.assertNotNull(res);
+	}
+	
+	/*
+	 * Condition 12:
+	 * 		- user is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testValidateUrlElementsExistenceCondition12() throws Exception {
+		USER.setId(USERID);
+		USER.setUsername("ADMIN");
+		
+		Mockito.when(userService.findById(USERID)).thenReturn(USER);
+		Mockito.when(notNullValidator.validateNotNull(USER)).thenThrow(new NullPointerException());
+		
+		Boolean res = validator.validateUrlElementsExistence(USERID);
+		
+		Assert.assertNull(res);
+	}
 }
